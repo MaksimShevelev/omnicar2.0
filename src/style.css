@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #app {
+  height: 100%;
+  font-family: "Lato", sans-serif; /* По умолчанию для всего текста */
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Nunito", sans-serif; /* Только для заголовков */
+  font-weight: 600;
+}
+
+#app {
+  display: grid;
+  grid-template-rows: 64px 1fr 100px;
+}
+
+.main-nav {
+  @apply flex justify-between items-center w-full p-2 bg-custom-green; 
+}
+
+.main-brand {
+  @apply text-white text-lg; 
+}
+
+.main-menu > li > a {
+  @apply block p-1 text-white hover:bg-custom-green-dark; 
+}
+
+.main-content {
+  @apply p-4; 
+}
+
+.main-footer {
+  @apply flex justify-center items-center h-24 bg-custom-green-dark text-white; 
+}
+
+/* Общие стили */
+.footer-link {
+  @apply text-center text-white flex flex-col items-center rounded-t-lg transition-all duration-200;
+}
+
+
+.footer-link svg {
+  @apply transition-all duration-300;
+}
+
+.footer-link span {
+  @apply transition-opacity duration-300;
+}
+
+
+/* Стили при наведении и активации */
+.footer-link:hover,
+.footer-link:focus {
+  @apply bg-green-500 text-gray-900 rounded-t-full p-10; /* Максимальное закругление */
+}
+
+.footer-link:hover svg,
+.footer-link:focus svg {
+  @apply transform scale-150; /* Увеличение иконки */
+}
+
+.footer-link:hover span,
+.footer-link:focus span {
+  @apply opacity-0; /* Скрытие текста */
+}
+
+
+/* Медиа-запрос для мобильных экранов */
+@media (max-width: 639px) {
+
+  .footer-link {
+    @apply text-center text-white flex flex-col items-center rounded-t-lg transition-all duration-200;
+    @apply flex flex-col items-center text-center transition-all duration-200;
+    flex-basis: 20%; /* Разделяем на 5 равных частей */
+  }
+
+  .footer-link:focus {
+    padding: 15px; /* Устанавливаем паддинг 5px */
+  }
+
+  .footer-link:hover svg,
+.footer-link:focus svg {
+  @apply transform scale-105; /* Увеличение иконки */
+}
+
+  .footer-link svg {
+    transform: scale(0.7); /* Уменьшаем размер иконок до 70% */
+  }
+}
