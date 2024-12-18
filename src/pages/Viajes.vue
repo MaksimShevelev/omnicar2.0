@@ -6,39 +6,38 @@
         </div>
   <BaseHeading1 class="flex flex-col rounded-x justify-center text-3xl items-center text-center mt-4">Lista de viajes
   </BaseHeading1>
-  <div class="flex bg-gray-100 rounded-xl gap-4 mb-40">
+  <div class="flex gap-4 mb-40">
 
     <section class="w-full">
-      <div class="p-4 border rounded">
+      <div class="p-4">
         <BaseLoader v-if="loadingTrips" />
 
         <ul class="flex flex-col gap-4">
           <li v-for="trip in sortedTrips" :key="trip.id">
             <div class="bg-white p-4 border rounded-xl shadow-md">
-              <div class="flex items-center justify-between text-xl">
-                <div class="mb-1 flex items-center space-x-4">
-                  <img
-                    :src="trip.photoURL || 'path/to/default-photo.jpg'" 
-                    alt="Фото профиля"
-                    class="w-20 h-20 rounded-full border-2 border-gray-300 object-cover"
-                  />
-                  <div>
-                    <h1 class="inline-flex items-center text-3xl space-x-2">
-                      <b>{{ trip.displayName || 'Имя отсутствует' }}</b>
-                    </h1>
-                  </div>
-                </div>
-                <div class="mb-1 flex items-center space-x-2">
-                  <span class="inline-block bg-gray-200 text-3xl my-4 p-4 border rounded-xl shadow text-gray-700 font-semibold">
-                    {{ trip.price }} $ ARS
-                  </span>
-                </div>
-            
-              </div>
+              <div class="flex flex-col lg:flex-row items-center justify-between text-xl">
+    <div class="mb-4 flex items-center space-x-4">
+        <img
+            :src="trip.photoURL || 'path/to/default-photo.jpg'"
+            alt="Foto de perfil"
+            class="w-20 h-20 rounded-full border-2 border-gray-300 object-cover"
+        />
+        <div>
+            <h1 class="inline-flex items-center text-3xl space-x-2">
+                <b>{{ trip.displayName || 'Sin nombre' }}</b>
+            </h1>
+        </div>
+    </div>
+    <div class="mb-4 flex items-center space-x-2">
+        <span class="inline-block bg-gray-200 text-3xl my-4 p-4 border rounded-xl shadow text-gray-700 font-semibold">
+            {{ trip.price }} $ ARS
+        </span>
+    </div>
+</div>
+
 
               <div class="text-2xl text-green-700">
                 <h2 class="inline-flex items-center text-2xl text-green-700 my-4 px-4 py-2 border rounded-xl shadow">
-                  <!-- Иконка для Origen -->
                   <span class="mr-2">
                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"
                       xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -53,14 +52,14 @@
                     </svg>
 
                   </span>
-                  <!-- Текст для Origen -->
-                  <strong class="text-gray-900">Origen -  <span class="text-green-700"> {{ trip.origin || 'Не указан' }} </span></strong>
+                  <strong class="text-gray-900 hidden sm:inline">Origen - </strong>
+<span class="text-green-700">{{ trip.origin || 'No especificado' }}</span>
+
                 </h2>
               </div>
 
               <div class="text-2xl text-green-700">
                 <h2 class="inline-flex items-center text-2xl text-green-700 my-4 px-4 py-2 border rounded-xl shadow">
-                  <!-- Иконка для Destino -->
                   <span class="mr-2">
 <svg width="38" height="50" viewBox="0 0 38 50" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="38" height="50" fill="url(#pattern0_241_9573)"/>
@@ -76,28 +75,20 @@
 
 
                   </span>
-                  <!-- Текст для Destino -->
-                  <strong class="text-gray-900">Destino - <span class="text-green-700">   {{ trip.destination || 'Не указано' }} </span></strong>
+                  <strong class="text-gray-900 hidden sm:inline">Destino - </strong><span class="text-green-700">   {{ trip.destination || 'No especificado' }} </span>
                 </h2>
 
                 <div class="flex items-center gap-2 mt-2 mb-4">
-                  <div class="inline-flex items-center text-2xl text-green-700 px-4 py-2 border rounded-xl shadow">
-                  <!-- Иконка для даты и времени -->
+                  <div class="inline-flex items-center text-2xl text-gray-900 px-4 py-2 border rounded-xl shadow">
                   <span class="mr-2">
-                    <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink">
-                      <rect width="38" height="38" fill="url(#pattern0_230_9576)" />
-                      <defs>
-                        <pattern id="pattern0_230_9576" patternContentUnits="objectBoundingBox" width="1" height="1">
-                          <use xlink:href="#image0_230_9576" transform="scale(0.02)" />
-                        </pattern>
-                        <image id="image0_230_9576" width="50" height="50"
-                          xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAByklEQVR4nO2ZPUvDUBSGn8HFwaGICkVExE3EoYMIIh26OomI6HAnVwcdozjW4h/oFCf/QNXFobg4OepY3NRFBBc/lkrwFg6hxZs2aW7a+8K7PJCevBzObXICTk6pqgI0tPczXAMfaGqfZLgGmQ0yr1t9DdwAz6JIQ7O43a7GpQ411U2IbeBL/KgNfgeKUUIsAT8W3HizQxjjzpyLC1+AA2APuBO8plncblfDAz4EPzYN8iAu2rFk2D3Bg5kx0pO4qGhJECV4vdcgm0BZuxTv/f9bQ8UZJE0pF4S/jpwldDpFtd9rR2x0faiD3Cf0TBXVj27YGcLjdwyY084LPiJ4YKkZwUcFnxA81+8gnYrMhobUpEZfHlFcEDLSkX5IuSAMcEcqHZZnG4JfCD4teGCpW8GXDWqoOINEHURrj19/UIIs6NfPUuifOi94QfBRwcOvxquC5wxqKHdqMcCnlgKq2uuCrwgeLPNaGhe8alMQP8Zhd0FIcEFXEDzYeLSUE7xsU0fSlOomiFxi72KHvNCW3khyqF+Bw5SXc17os8KRaZBF4DuhnVSvfgMmo7RyC/i0MMQaXSh41jkFrlJeztX0V6pInXBycnLCev0CyQy2aCV3ZFcAAAAASUVORK5CYII=" />
-                      </defs>
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-calendar4-week" viewBox="0 0 16 16">
+  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+  <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-2 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+</svg>
+                    
+
                   </span>
-                  <!-- Текст для даты и времени -->
-                  {{ trip.date || 'Не указана' }} - {{ trip.time || 'Не указано' }}
+                  <span class="text-green-700">{{ trip.date || 'No especificada' }} - {{ trip.time || 'No especificado' }}</span>
                 </div>
 
               </div>
@@ -107,11 +98,9 @@
 
 
               <div class="flex items-center justify-between my-4">
-                <!-- Контейнер для даты и времени -->
                 <span v-for="option in trip.options" :key="option.icon" v-html="option.icon"
                 class="inline-block p-2"></span>
 
-                <!-- Кнопка "Reservar" справа -->
                 <button @click="openModal(trip)"
                   class="ml-auto py-3 px-6 text-lg font-semibold rounded bg-green-700 text-white transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900">
                   Ver más
@@ -127,9 +116,8 @@
     </section>
   </div>
 
-  <!-- Modal for Reservar -->
   <TransitionRoot as="div" :show="modalOpen">
-  <Dialog class="relative mt-20 mb-20 z-40" @close="closeModal">
+  <Dialog class="ventana relative mt-20 mb-20 z-40" @close="closeModal">
     <TransitionChild as="div" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
       leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
@@ -143,41 +131,35 @@
           leave-from="opacity-100 translate-y-0 md:scale-100"
           leave-to="opacity-0 translate-y-4 md:translate-y-0 md:scale-95">
           
-          <!-- Full-width DialogPanel -->
           <DialogPanel class="flex w-full transform text-left text-base transition bg-white rounded shadow-lg p-0">
             
-            <!-- Close Button -->
             <button type="button" class="absolute right-4 top-4 text-gray-400 hover:text-gray-500"
               @click="closeModal">
               <span class="sr-only">Close</span>
               <XMarkIcon class="h-6 w-6" aria-hidden="true" />
             </button>
 
-            <!-- Modal Content -->
             <div v-if="selectedTrip" class="w-full p-6">
               <h2 class="text-3xl font-bold">Viaje de {{ selectedTrip.displayName || 'Información de viaje' }}</h2>
-              <h3 class="inline-flex text-xl my-2 p-4 border rounded-xl shadow text-green-700">
+              <h3 class="inline-flex text-xl p-2 border rounded-xl shadow text-green-700">
                 <strong>Precio x asiento: <span class="text-gray-900"> {{ selectedTrip.price }} </span> $ ARS</strong> 
               
               </h3>
-              <!-- Trip Details -->
               <div class="my-4 text-lg">
               
-              <h3 class="inline-flex text-xl my-2 p-4 border rounded-xl shadow text-green-700">
-              <strong>Cantidad de asientos: <span class="text-gray-900"> {{ selectedTrip.numSeats || 'Не указано' }} </span></strong>
+              <h3 class="inline-flex text-xl p-2 mb-2 border rounded-xl shadow text-green-700">
+              <strong>Cantidad de asientos: <span class="text-gray-900"> {{ selectedTrip.numSeats || 'Auto lleno' }} </span></strong>
               </h3>
-                <p><strong>Origen:</strong> {{ selectedTrip.origin || 'Не указан' }}</p>
-                <p><strong>Destino:</strong> {{ selectedTrip.destination || 'Не указано' }}</p>
-                <p><strong>Fecha:</strong> {{ selectedTrip.date || 'Не указана' }}</p>
-                <p><strong>Horario de salida:</strong> {{ selectedTrip.time || 'Не указано' }}</p>
+                <p><strong>Origen:</strong> {{ selectedTrip.origin || 'No especificado' }}</p>
+                <p><strong>Destino:</strong> {{ selectedTrip.destination || 'No especificado' }}</p>
+                <p><strong>Fecha:</strong> {{ selectedTrip.date || 'No especificado' }}</p>
+                <p><strong>Horario de la salida:</strong> {{ selectedTrip.time || 'No especificado' }}</p>
               </div>
 
-              <!-- Map Image -->
               <div v-if="selectedTrip.mapSnapshot">
                 <img :src="selectedTrip.mapSnapshot" alt="Mapa de la ruta" class="rounded mt-4 w-full h-auto" />
               </div>
 
-              <!-- Options Section -->
               <div class="my-4">
                 <h3 class="block mb-2 text-xl text-green-700">Opciones</h3>
                 <div v-if="selectedTrip.options && selectedTrip.options.length" class="grid grid-cols-2 gap-2">
@@ -187,73 +169,70 @@
                   </span>
                 </div>
                 <div v-else>
-                  <p>Опции не указаны</p>
+                  <p>No especificado</p>
                 </div>
               </div>
-    <!-- Другие детали поездки -->
-    
-    <!-- Блок с описанием -->
-     <!-- Проверка наличия описания перед выводом -->
 
 
-    <p><strong>Descripción:</strong> {{ selectedTrip.description || 'Описание отсутствует' }}</p>
 
-              <!-- Comments Section -->
-              <div class="bg-gray-200 mb-10 p-4 rounded mt-4 w-full">
-                <h3 class="text-lg mt-2">Preguntas</h3>
-                <ul class="ml-4">
-                  <li v-for="comment in comments[selectedTrip.id]" :key="comment.id">
-                    <b>{{ comment.rol }}</b> - <b>{{ comment.displayName }}:</b> {{ comment.text }}
-                  </li>
-                </ul>
-                <form @submit.prevent="handleCommentSubmit(selectedTrip.id)" class="mt-2">
-                  <textarea v-model="newComment[selectedTrip.id]" class="w-full min-h-8 p-2 border rounded"></textarea>
-                  <button type="submit"
-                    class="mt-2 py-2 px-4 rounded bg-green-700 text-white transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900">
-                    Enviar
-                  </button>
-                </form>
-              </div>
+    <p><strong>Descripción:</strong> {{ selectedTrip.description || 'No especificado' }}</p>
+
+    <div class="bg-gray-200 mb-10 p-4 rounded mt-4 w-full">
+  <h3 class="text-lg mt-2">Preguntas</h3>
+  <ul class="ml-4">
+    <li v-for="comment in comments[selectedTrip.id]" :key="comment.id">
+      <b>{{ comment.rol }}</b> - <b>{{ comment.displayName }}:</b> {{ comment.text }}
+    </li>
+  </ul>
+  <form @submit.prevent="handleCommentSubmit(selectedTrip.id)" class="mt-2 flex flex-col">
+    <textarea
+      v-model="newComment[selectedTrip.id]"
+      class="w-full min-h-8 p-2 border rounded"
+    ></textarea>
+    <div class="flex justify-end mt-2">
+      <button
+        type="submit"
+        class="py-2 px-4 rounded bg-green-700 text-white transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900"
+      >
+        Enviar
+      </button>
+    </div>
+  </form>
+</div>
+
 
               
+              <div class="flex justify-center border-t items-center pt-2 mt-2">
+  <button
+    v-if="!loadingReservation"
+    @click="handleReserve"
+    class="mt-4 px-4 py-2 bg-green-600 text-white rounded text-lg font-semibold transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900"
+  >
+    Reservar asiento
+  </button>
+  <BaseLoader v-else/>
+</div>
 
-              <!-- Confirm Button -->
-              <router-link
-                :to="`/usuario/${selectedTrip.user_id}`"
-                class="mt-4 px-4 py-2 bg-green-600 text-white rounded text-lg font-semibold transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900"
-              >
-                Reservar
-              </router-link>
             </div>
-
           </DialogPanel>
         </TransitionChild>
       </div>
     </div>
   </Dialog>
 </TransitionRoot>
-
-
-
 </template>
-
-
-
-
-
-
 
 <script>
 import BaseHeading1 from '../components/BaseHeading1.vue';
 import BaseLoader from '../components/BaseLoader.vue';
 import ProfileData from '../components/profile/ProfileData.vue';
 import { subscribeToAuthState } from '../services/auth.js';
-import { subscribeToTrips, saveChatMessage, subscribeToChatMessages, saveComment, subscribeToComments } from '../services/viajes.js';
+import { subscribeToTrips, saveViajes, subscribeToViajes, saveComment, subscribeToComments } from '../services/viajes.js';
 import { getUserProfileById } from '../services/user-profile.js';
 import { ref } from 'vue';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
-
+import { updateTripSeats } from "../services/viajes";
 export default {
   name: 'Viajes',
   components: {
@@ -274,9 +253,10 @@ export default {
       },
       unsubscribeChat: null,
       modalOpen: false,
-      confirmModalOpen: false, // Controls the confirmation modal
+      confirmModalOpen: false,
       selectedTrip: null,
       selectedTrip: null,
+      loadingReservation: false, 
     };
   },
   methods: {
@@ -288,9 +268,9 @@ export default {
         trip.rol = profile.rol;
         trip.photoURL = profile.photoURL || 'path/to/default-photo.jpg';
       } else {
-        trip.email = 'Неизвестный пользователь';
-        trip.displayName = 'Имя отсутствует';
-        trip.rol = 'без роли';
+        trip.email = 'No especificado';
+        trip.displayName = 'No especificado';
+        trip.rol = 'No especificado';
         trip.photoURL = 'path/to/default-photo.jpg';
       }
     },
@@ -309,6 +289,31 @@ export default {
       this.newComment[tripId] = '';
       this.fetchComments(tripId);
     },
+    async handleReserve() {
+  if (!this.selectedTrip || this.selectedTrip.numSeats <= 0) {
+    console.error("No hay asientos disponibles");
+    return;
+  }
+
+  this.loadingReservation = true; 
+
+  try {
+    this.selectedTrip.numSeats -= 1;
+    await updateTripSeats(this.selectedTrip.id, this.selectedTrip.numSeats);
+
+    console.log("Reserva exitosa");
+    this.$router.push(`/usuario/${this.selectedTrip.user_id}`);
+  } catch (error) {
+    console.error("Error reservando el viaje:", error);
+  } finally {
+    this.loadingReservation = false; 
+  }
+},
+  async loadTrips() {
+    subscribeToTrips((fetchedTrips) => {
+      this.trips = fetchedTrips;
+    });
+  },
     fetchComments(tripId) {
       subscribeToComments(tripId, (comments) => {
         this.comments[tripId] = comments;
@@ -324,13 +329,14 @@ export default {
     },
     
     openModal(trip) {
-    this.selectedTrip = null; // сброс
+    this.selectedTrip = null; 
     this.$nextTick(() => {
         this.selectedTrip = trip;
         this.modalOpen = true;
         this.fetchComments(trip.id);
     });
 },
+
 
   closeModal() {
     this.modalOpen = false;
@@ -351,12 +357,12 @@ export default {
   },
   async mounted() {
     this.loadingTrips = true;
-    this.unsubscribeChat = subscribeToChatMessages(async (newMessages) => {
+    this.unsubscribeChat = subscribeToViajes(async (newViajes) => {
       this.loadingTrips = false;
-      for (const message of newMessages) {
-        await this.loadUserProfile(message);
+      for (const viaje of newViajes) {
+        await this.loadUserProfile(viaje);
       }
-      this.trips = newMessages;
+      this.trips = newViajes;
     });
 
     this.unsubscribeAuth = subscribeToAuthState(newUserData => this.loggedUser = newUserData);
@@ -364,7 +370,7 @@ export default {
     subscribeToTrips((fetchedTrips) => {
     this.trips = fetchedTrips.map(trip => ({
         ...trip,
-        description: trip.description || 'Описание отсутствует', // Убедитесь, что description присутствует
+        description: trip.description || 'No especificado', 
     }));
 });
   },
@@ -379,3 +385,11 @@ export default {
   }
 }
 </script>
+
+<style>
+
+.ventana{
+  z-index: 9999;
+}
+
+</style>

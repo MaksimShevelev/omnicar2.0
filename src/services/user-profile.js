@@ -2,13 +2,12 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 /**
- * Получает профиль пользователя по его ID.
  * @param {string} id 
  * @returns {Promise<{id: string, email: string, displayName: string|null, rol: string|null, bio: string|null, photoURL: string|null} | null>}
  */
 export async function getUserProfileById(id) {
     if (!id) {
-        console.error("getUserProfileById: отсутствует ID пользователя");
+        console.error("getUserProfileById: No especificado");
         return null;
     }
 
@@ -32,14 +31,13 @@ export async function getUserProfileById(id) {
 }
 
 /**
- * Создает профиль пользователя.
  * @param {string} id 
  * @param {{email: string}} data
  * @returns {Promise<void>}
  */
 export async function createUserProfile(id, { email }) {
     if (!id || !email) {
-        console.error("createUserProfile: неверные данные");
+        console.error("createUserProfile: No especificado");
         return;
     }
     const userRef = doc(db, `users/${id}`);
@@ -47,14 +45,13 @@ export async function createUserProfile(id, { email }) {
 }
 
 /**
- * Редактирует профиль пользователя.
  * @param {string} id 
  * @param {{displayName: string, bio: string, photoURL: string, rol: string}} data
  * @returns {Promise<void>}
  */
 export async function editUserProfile(id, data) {
     if (!id || !data) {
-        console.error("editUserProfile: неверные данные");
+        console.error("editUserProfile: No especificado");
         return;
     }
     const userRef = doc(db, `users/${id}`);

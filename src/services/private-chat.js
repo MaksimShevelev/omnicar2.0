@@ -1,11 +1,22 @@
-import { db } from "./firebase";
-import { collection, query, where, getDocs, addDoc, serverTimestamp, orderBy, onSnapshot } from "firebase/firestore";
+import { db } from "./firebase";  
+import { 
+    collection, 
+    query, 
+    where, 
+    getDocs, 
+    addDoc, 
+    serverTimestamp, 
+    orderBy, 
+    limit, 
+    onSnapshot 
+} from "firebase/firestore";
 import { getUserProfileById } from "./user-profile";
 
-const chatsCache = {};
+// Кэш чатов
+let chatsCache = {};  
 
 /**
- * Генерирует уникальный ключ для кэширования чатов.
+ * Получаем ключ для кэша на основе id пользователей.
  * @param {string} senderId 
  * @param {string} receiverId 
  * @returns {string}
@@ -15,7 +26,7 @@ function getCacheKey(senderId, receiverId) {
 }
 
 /**
- * Добавляет чат в кэш.
+ * Добавляем данные в кэш
  * @param {string} key 
  * @param {any} value 
  */
@@ -24,14 +35,14 @@ function cacheAdd(key, value) {
 }
 
 /**
- * Получает документ чата между двумя пользователями.
+ * Получаем документ чата между пользователями.
  * @param {string} senderId 
  * @param {string} receiverId 
  * @returns {Promise<DocumentReference>}
  */
 async function getPrivateChatDocument(senderId, receiverId) {
     if (!senderId || !receiverId) {
-        console.error("getPrivateChatDocument: неверные данные");
+        console.error("getPrivateChatDocument: Не указаны ID пользователей");
         return null;
     }
 
@@ -65,7 +76,7 @@ async function getPrivateChatDocument(senderId, receiverId) {
 }
 
 /**
- * Сохраняет сообщение в приватном чате.
+ * Сохраняем сообщение в чате.
  * @param {string} senderId 
  * @param {string} receiverId 
  * @param {string} text 
@@ -75,28 +86,51 @@ export async function savePrivateChatMessage(senderId, receiverId, text) {
     if (!privateChatDoc) return;
 
     const messagesRef = collection(db, `private-chats/${privateChatDoc.id}/messages`);
-    await addDoc(messagesRef, {
+    const messageRef = await addDoc(messagesRef, {
         user_id: senderId,
+        text,
+        created_at: serverTimestamp(),
+    });
+
+    // Создаем уведомление для получателя
+    await saveNotification(senderId, receiverId, messageRef.id, text);
+}
+
+/**
+ * Сохраняем уведомление для получателя
+ * @param {string} senderId 
+ * @param {string} receiverId 
+ * @param {string} messageId 
+ * @param {string} text 
+ */
+async function saveNotification(senderId, receiverId, messageId, text) {
+    const notificationsRef = collection(db, 'notifications');
+    await addDoc(notificationsRef, {
+        chat_id: getCacheKey(senderId, receiverId),
+        message_id: messageId,
+        sender_id: senderId,
+        receiver_id: receiverId,
         text,
         created_at: serverTimestamp(),
     });
 }
 
 /**
- * Подписка на сообщения в приватном чате.
+ * Подписка на новые сообщения в чате.
  * @param {string} senderId 
  * @param {string} receiverId 
  * @param {Function} callback 
+ * @param {object} store 
  * @returns {Promise<import("firebase/firestore").Unsubscribe>}
  */
-export async function subscribeToPrivateChatMessages(senderId, receiverId, callback) {
+export async function subscribeToPrivateChatMessages(senderId, receiverId, callback, store) {
     const privateChatDoc = await getPrivateChatDocument(senderId, receiverId);
     if (!privateChatDoc) return;
 
     const messagesRef = collection(db, `private-chats/${privateChatDoc.id}/messages`);
     const messagesQuery = query(messagesRef, orderBy('created_at'));
 
-    return onSnapshot(messagesQuery, snapshot => {
+    const unsubscribe = onSnapshot(messagesQuery, snapshot => {
         const messages = snapshot.docs.map(doc => ({
             id: doc.id,
             user_id: doc.data().user_id,
@@ -104,18 +138,25 @@ export async function subscribeToPrivateChatMessages(senderId, receiverId, callb
             created_at: doc.data().created_at?.toDate(),
         }));
 
+        const lastMessage = messages[messages.length - 1];
+        if (lastMessage.user_id !== senderId) {
+            store.dispatch('newMessageReceived');
+        }
+
         callback(messages);
     });
+
+    return unsubscribe;
 }
 
 /**
- * Получает список приватных чатов текущего пользователя.
- * @param {string} userId - ID текущего пользователя.
- * @returns {Promise<Array<{ chatId: string, otherUserId: string }>>}
+ * Получаем чаты пользователя.
+ * @param {string} userId 
+ * @returns {Promise<Array>}
  */
 export async function getUserPrivateChats(userId) {
     if (!userId) {
-        console.error("getUserPrivateChats: отсутствует ID пользователя");
+        console.error("getUserPrivateChats: Не указан ID пользователя");
         return [];
     }
 
@@ -124,25 +165,47 @@ export async function getUserPrivateChats(userId) {
 
     const snapshot = await getDocs(q);
 
-    return snapshot.docs.map(doc => {
-        const users = Object.keys(doc.data().users);
-        const otherUserId = users.find(id => id !== userId);
+    const chats = await Promise.all(
+        snapshot.docs.map(async doc => {
+            const users = Object.keys(doc.data().users);
+            const otherUserId = users.find(id => id !== userId);
 
-        return { 
-            chatId: doc.id, 
-            otherUserId
-        };
-    });
+            const messagesRef = collection(db, `private-chats/${doc.id}/messages`);
+            const messagesQuery = query(messagesRef, orderBy('created_at', 'desc'), limit(1));
+            const messagesSnapshot = await getDocs(messagesQuery);
+
+            let lastMessage = 'Нет сообщений';
+            let lastMessageTime = null;
+
+            if (!messagesSnapshot.empty) {
+                const lastMessageDoc = messagesSnapshot.docs[0];
+                lastMessage = lastMessageDoc.data().text || 'Без текста';
+                lastMessageTime = lastMessageDoc.data().created_at?.toDate() || null;
+            }
+
+            return { 
+                chatId: doc.id, 
+                otherUserId,
+                lastMessage,
+                lastMessageTime,
+            };
+        })
+    );
+
+    return chats;
 }
 
+
+
 /**
- * Получает профили пользователей по их ID.
- * @param {Array<string>} userIds - массив ID пользователей.
- * @returns {Promise<Array<{ id: string, email: string, displayName: string }>>}
+ * Получаем профили пользователей по их ID.
+ * 
+ * @param {Array<string>} userIds 
+ * @returns {Promise<Array>} 
  */
 export async function getUsersProfiles(userIds) {
     const profiles = await Promise.all(
-        userIds.map(id => id ? getUserProfileById(id) : null)
+        userIds.map(id => getUserProfileById(id))  // Используем getUserProfileById для получения профилей
     );
-    return profiles.filter(profile => profile);
+    return profiles.filter(profile => profile); // Возвращаем только валидные профили
 }

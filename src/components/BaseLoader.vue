@@ -1,9 +1,3 @@
-<script>
-export default {
-    name: 'BaseLoader',
-}
-</script>
-
 <template>
   <div class="loader-overlay">
     <div class="loader-icon">
@@ -23,26 +17,34 @@ export default {
   </div>
 </template>
 
+<script>
+export default {
+    name: 'BaseLoader',
+}
+</script>
+
 <style scoped>
 .loader-overlay {
-    position: fixed;
-    top: 0;
+    position: fixed; 
+    top: 0; 
     left: 0;
-    width: 100vw;
+    width: 100vw; 
     height: 100vh;
-    background: rgba(255, 255, 255, 0.5); /* полупрозрачный фон */
+    background: rgba(255, 255, 255, 0.5); 
     display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000; /* поверх всего контента */
+    align-items: center; /* Центрирует по вертикали */
+    justify-content: center; /* Центрирует по горизонтали */
+    z-index: 1000;
+    overflow: hidden; /* Убирает полосы прокрутки */
 }
 
 .loader-icon {
     width: 80px;
     height: 100px;
-    animation: spin 1.5s linear infinite; /* анимация вращения вокруг вертикальной оси */
-    transform-origin: 50% 50%; /* центрируем ось вращения точно по центру */
-    transform-style: preserve-3d; /* сохраняем 3D-перспективу */
+    animation: spin 1.5s linear infinite;
+    transform-origin: 50% 50%;
+    transform-style: preserve-3d;
+    margin-top: -20px; /* Сдвиг вверх на 20px */
 }
 
 @keyframes spin {
@@ -54,3 +56,5 @@ export default {
     }
 }
 </style>
+
+

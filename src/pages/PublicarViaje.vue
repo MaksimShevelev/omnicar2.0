@@ -1,55 +1,106 @@
 <template>
-    <BaseHeading1 class="flex flex-col justify-center text-3xl items-center text-center mt-4">Opciones del viaje</BaseHeading1>
-    <div class="flex flex-col justify-center items-center text-center mt-8"></div>
-    <div class="mb-40 p-4 border rounded flex">
-        <section class="w-1/2 p-2">
-            <form @submit.prevent="handleSubmit">
-                <div class="mb-4">
-                    <h3 class="block mb-2 text-xl text-green-700">Descripción del viaje</h3>
-                    <textarea id="text" class="w-full min-h-8 p-2 border rounded" v-model="newMessage.text"></textarea>
-                </div>
+    <BaseHeading1 class="flex flex-col justify-center text-3xl items-center text-center mt-4">Opciones del viaje
+    </BaseHeading1>
+    <div class="mb-40 p-4 flex flex-col">
+    <form @submit.prevent="handleSubmit" class="flex flex-col lg:flex-row w-full gap-10">
+        <section class="lg:w-1/2 p-4 lg:border-r">
+            <div class="mb-4">
+                <label for="tripDate" class="block mb-2 text-xl text-green-700">Descripción del viaje</label>
+                <textarea
+                    id="text"
+                    class="w-full min-h-8 p-2 border rounded"
+                    v-model="newViaje.text"
+                ></textarea>
+            </div>
 
-                <!-- Поле для выбора даты поездки -->
-                <div class="mb-4">
-                    <label for="tripDate" class="block mb-2">Fecha del viaje</label>
-                    <input type="date" id="tripDate" v-model="tripDate" :min="todayDate" class="w-full p-2 border rounded" required />
-                </div>
+            <div class="mb-4">
+                <label for="tripDate" class="block mb-2">Fecha del viaje</label>
+                <input
+                    type="date"
+                    id="tripDate"
+                    v-model="tripDate"
+                    :min="todayDate"
+                    class="w-60 p-2 border rounded"
+                    required
+                />
+            </div>
 
-                <!-- Поле для выбора времени поездки -->
-                <div class="mb-4">
-                    <label for="tripTime" class="block mb-2">Horario de salida</label>
-                    <input type="time" id="tripTime" v-model="tripTime" :min="isToday ? currentTime : null" class="w-full p-2 border rounded" required />
-                </div>
+            <div class="mb-4">
+                <label for="tripTime" class="block mb-2">Horario de la salida</label>
+                <input
+                    type="time"
+                    id="tripTime"
+                    v-model="tripTime"
+                    :min="isToday ? currentTime : null"
+                    class="w-60 p-2 border rounded"
+                    required
+                />
+            </div>
 
-                <!-- Поле с radio для выбора типа поездки -->
-                <div class="mb-4">
-                    <h3 class="block mb-2 text-xl text-green-700">¿Que tipo de la reserva prefieres agregar?</h3>
-                    <label class="inline-flex items-center">
-                        <input type="radio" value="revisar" v-model="tripType" class="mr-2" /> Revisar cada solicitud
-                        <span class="ml-3" v-html="tripTypeIcons.revisar"></span>
-                    </label>
-                    <label class="inline-flex items-center ml-4">
-                        <input type="radio" value="automaticomente" v-model="tripType" class="mr-2 ml-3" /> Confirmación automática
-                        <span class="ml-3" v-html="tripTypeIcons.automaticomente"></span>
-                    </label>
-                </div>
-
-                <!-- Поле с checkbox для выбора опций -->
-                <div class="mb-4">
-                    <h3 class="block mb-2 text-xl text-green-700">Opciones</h3>
-                    <div v-for="option in availableOptions" :key="option" class="flex items-center">
-                        <input type="checkbox" :value="option" v-model="options" class="mr-2 mt-4 bg-green-700" />
-                        <span class="ml-3 mt-4" v-html="optionIcons[option]"></span>
-                        <span class="ml-3 mt-4">{{ option }}</span>
-                    </div>
-                </div>
-
-                <BaseLoader v-if="isUpdating" class="mt-4" />
-
-                <button type="submit" class="transition-all mt-4 py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900">Publicar</button>
-            </form>
+            <div class="mb-4">
+                <h3 class="block mb-2 text-xl text-green-700">¿Que tipo de la reserva prefieres agregar?</h3>
+                <label class="inline-flex items-center">
+                    
+                    <input
+                        type="radio"
+                        value="revisar"
+                        v-model="tripType"
+                        class="p-2"
+                    />
+                    <span class="p-3" v-html="tripTypeIcons.revisar"></span>
+                     Revisar cada solicitud
+                </label>
+                <label class="inline-flex items-center mt-5 lg:ml-3">
+                    
+                    <input
+                        type="radio"
+                        value="automaticomente"
+                        v-model="tripType"
+                        class="p-2"
+                    />
+                    <span class="p-1" v-html="tripTypeIcons.automaticomente"></span>
+                     Confirmación automática
+                </label>
+            </div>
         </section>
+
+        <section class="lg:w-1/2 p-4">
+            <div class="mb-4">
+                <label for="tripDate" class="block mb-2 text-xl text-green-700">Opciones</label>
+                <div
+                    v-for="option in availableOptions"
+                    :key="option"
+                    class="flex items-center mb-4"
+                >
+                    <input
+                        type="checkbox"
+                        :value="option"
+                        v-model="options"
+                        class="mr-2 bg-green-700"
+                    />
+                    <span class="ml-3" v-html="optionIcons[option]"></span>
+                    <span class="ml-3">{{ option }}</span>
+                </div>
+            </div>
+        </section>
+    </form>
+
+    <div class="flex justify-center border-t items-center pt-10 mt-10">
+        <button
+            type="button"
+            @click="handleSubmit"
+            class="transition-all w-80 py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900"
+        >
+            Publicar
+        </button>
     </div>
+
+    <BaseLoader v-if="isUpdating" class="mt-4" />
+</div>
+
+
+
+
     <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
         <div class="bg-white p-6 rounded shadow-lg text-center">
             <p class="text-lg font-semibold">¡Viaje publicado con éxito!</p>
@@ -58,6 +109,7 @@
             </button>
         </div>
     </div>
+    
 </template>
 
 <script>
@@ -66,20 +118,20 @@ import mapboxgl from 'mapbox-gl';
 import BaseLoader from '../components/BaseLoader.vue';
 import BaseHeading1 from '../components/BaseHeading1.vue';
 import { subscribeToAuthState } from '../services/auth.js';
-import { saveChatMessage, subscribeToChatMessages, saveComment, subscribeToComments, updateTrip } from '../services/viajes.js';
+import { saveViajes, subscribeToViajes, saveComment, subscribeToComments, updateTrip } from '../services/viajes.js';
 
-let unsubscribeAuth = () => {};
+let unsubscribeAuth = () => { };
 
 mapboxgl.accessToken = 'pk.eyJ1IjoibWF4aWFzZGRzYWRzZGYiLCJhIjoiY20ydGM4MGFzMDFrZDJrb2gyMGV5ajFnMCJ9.l0ZQB85L5nD3LWTRYM0hlA';
 
 export default {
     name: 'PublicarViaje',
     props: ['tripId'],
-    components: { BaseHeading1, BaseLoader  },
+    components: { BaseHeading1, BaseLoader },
     data() {
         return {
-            messages: [],
-            newMessage: { text: '' },
+            viajes: [],
+            newViaje: { text: '' },
             comments: {},
             newComment: {},
             loggedUser: { id: null, email: null, displayName: null, rol: null },
@@ -89,34 +141,35 @@ export default {
             options: [],
             isUpdating: false,
             description: '',
-            showModal: false, // Controls the loader visibility
+            showModal: false, 
             availableOptions: [
-                'Se permite fumar', 'Se permite la comida y bebida', 'Se permiten mascotas', 'No me gusta hablar mucho',
-                'El baúl está vacío', 'Viajo hasta el destino sin paradas', 'Hay puertos USB para cargar'
+                'Se permite fumar', 'Se permite comida y bebida', 'Se permiten mascotas', 'No me gusta hablar mucho',
+                'El baúl está vacío', 'Viajo hasta el destino sin paradas', 'Hay puertos USB para cargar', 'Hay una sillita para niños'
             ],
-            availableOptions: ['Se permite fumar', 'Se permite la comida y bebida', 'Se permiten mascotas', 'No me gusta hablar mucho', 'El baúl está vacío', 'Viajo hasta el destino sin paradas', 'Hay puertos USB para cargar'], // Доступные опции для checkbox
+            availableOptions: ['Se permite fumar', 'Se permite comida y bebida', 'Se permiten mascotas', 'No me gusta hablar mucho', 'El baúl está vacío', 'Viajo hasta el destino sin paradas', 'Hay puertos USB para cargar', 'Hay una sillita para niños'], 
             optionIcons: {
-        'Se permite fumar': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="25" height="25" fill="url(#pattern0_40_3365)"/>
+                'Se permite fumar': `<svg width="35" height="35" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="50" height="50" fill="url(#pattern0_286_9573)"/>
 <defs>
-<pattern id="pattern0_40_3365" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_40_3365" transform="scale(0.02)"/>
+<pattern id="pattern0_286_9573" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_286_9573" transform="scale(0.02)"/>
 </pattern>
-<image id="image0_40_3365" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACP0lEQVR4nO2YPWhUQRDHf6L4nUIQ0yiCCkoqI0ZEsBIUz0bQIxrQGAz4haDNWWiwECxEJWmstBALURQsNIgiSFIEEUMgiYUkld9WWmg8NT7ZMJFh2ZecFsnssT9YOGbncfPffW9mdiGRqBoWAeeBDvkdJYuBQSCT4cRExzzguRLhxiUi5KIn4iFQQ2QsBb4rEU+BOUTIGSWiDCwnUrqVkNtEzHsl5Hhgvh4YBr5JVrsMrMAgZSWkKTB/zUsEmYhqxRgfVIAnAvMHAkIy4DdQwBCPVHA9wIyAzzrgMHALGFX+LzDEEW+lj03iv8vzX4mhqv5WBeZW/NAkz/Qr/17gNLAEA2wDfnkrfRVYkON/J/DNfAb2YYA9wA8vuFfAxoBvS04CcLu5EwPskJXVwbmdOhtIAuslAdyVDDbu/waYiwFci9IVWO0bwOycZxo9XxO74pgJnPKKZQbczEnPjgHldwFjNADvPDF7K0gA1zGIe9U+qSDdyofYr3xMZK8Qbhf0rqzK8dsgwywLPSGu7kTLsBLiWvtoWSvVvnm6A0kkpohZQC1QB2yWtuIgUJLK7I649+Ry4iXwERgBHqjropLYHqv+KmSrmPnAMvkgt0jvcxRoA9qlT+oEngFDgcbwX8d2+d+vylaYwPaXTcA54IocN58AfcBruQjIpngUJa5KbWOsCRx6pnsU/0fIbgOBJyF6R1YDP6vh1ULOzdF/7JbT7xdl2zqBzVxBLEtBHD+7n5TA76viF7IlEolEIpGgWvgDsjPkn/sAlIEAAAAASUVORK5CYII="/>
+<image id="image0_286_9573" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACZUlEQVR4nO2YPWgUQRTHf4L4hZwRgqRQwQMRktiIHxCLa64SQdGIXGFzhW0aIRZBEPxArNIEgkZRCxEVRD0VLoWJKH6RBBVtklgYLfTAHCgaFVcG/gvrspHbI8fOxvnBwu7Mvtl5b96892bB4XDYwhLgITBEyjkNeMDziL4bwDjwBDgPFIBFWMgq4CvwG9gS0f9USnqB6x2QxzKOaHL3/vHOMmAtsAu4q/d/ATuxCN/iB2LIHJbMJ2AlFrBAbuXJ4nEoS+4Qliji+33cDbxXcsNYwgdNaGNMudWBvfICuADslnES4aImdKuOSdyPiGiPgSwJ0AZ81ySu1bF5FwIbgC7grcaZBDIkwH7ghybxBRgAOuuwbAYYSzoImGT4KMJVpoEHQB9wsIbo5geBZySMUegoUAI+RijmAYPAtlnks3rHyFqFiU47lATvBPbTT61QmPXqN9HQalpUPPqhd2uof4/6jDumgkua8M1Q+4DaT5ES1qli/gYsDbR/liKbSRFXgFfAYj2bhPpSB7TEMrwjCZqANUCr8oA55e0DiioxerRJ+4HLwG25yQgwAVSAmVlyS/h6D5wMV9XLlWg2ATmdzAqK493AMaAXOKd6qawD0xtgCqjW+PFGXCd8C15X8pmLQatS7LV+JhiFr8oAvTJItwxUkMFyMmAWaNbG9scLEm7rCKwMZ/Uwo6Ud1UGmpKXvlyv0yDWKcpW8XKdVrmQMMpd4NSjyV1tFN6bUtgkvriJRnTbg/beKVHTTTsoVOTNfNvsKhcc0ht/tejbfmxcJ8TgpL1GmpISVf+4dDofD4XA4HA4awh+NcGFA56kLEgAAAABJRU5ErkJggg=="/>
+</defs>
+</svg>
+
+`,
+                'Se permite comida y bebida': `<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="35" height="35" fill="url(#pattern0_286_9574)"/>
+<defs>
+<pattern id="pattern0_286_9574" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_286_9574" transform="scale(0.02)"/>
+</pattern>
+<image id="image0_286_9574" width="50" height="50" xlink:href="data:image/png;base64,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"/>
 </defs>
 </svg>
 `,
-        'Se permite la comida y bebida': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="25" height="25" fill="url(#pattern0_40_3364)"/>
-<defs>
-<pattern id="pattern0_40_3364" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_40_3364" transform="scale(0.02)"/>
-</pattern>
-<image id="image0_40_3364" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADlElEQVR4nNWaW4gPURzHP7uLDZuUbJuV+yJyeSCXFNZ6cC8tK1KyD4u25L4lsopEIqxyi9I+KJcsDyRs7AMtyiaRZeWBXFuU21qro9/UMc5/Zv7/MzP6f+v3MvOb3zmfOWfO5XcG4lEmsBlYTpqrBGgT60oa67ZA1JPGmqy1xjzSWBcF4hnQjjTVIKBVQMpJYx0ViPdADmmqXOCrgGyNo8CxQB1wJ2R7qn3kjxL4bAsTZLdWYNymWiwjLJA8oFLG+LgA1ACwA5hOBNoSI8hbIlR5jCAP41oPtUVsN6IEmRIjyJkoQYbHCHJYyswGJgB9ZakfinrECLJdW8I41z4DtcAqoJcNSIcYQVRlkdYw3f8lk3RRqjDNMYEslvLaA/2BQmA1cBr46PK9DAxMFqQxJpBpPj2jBLiv+TcnO3neiglkVIC6jDCsBkqDglyQh67LSFIM1EifDROkj0dr9JPuttPw3A9gahCQ4/LAVcN29WWIIJ1d8dXOcb9U1O/ZD0B3PxDnLTQY7g0AXocA8cUQe12SMar8QNaLo3r7Jk0KoZu9MMS9lmSMFlm1J9RSrS8m2iectAS564qXkWJLr/ACmRUgkTbSEkTNC7pKU4xz1gtknOZY4OH3wAKkWmJkAfuAnyG17F8q0BwVVCIdtADZKzHyLFu2yaN+f7qT4zjbw2+lRQU2SoxhUYJkaGO5+vATaZFFBcokRmGUIEqvxHEDibXEogJzJcaCqEEaxHGXh0+yE5huE0PKEbwB8r1AnMnphIdPtUUFhkiMSkuQNuCbtKxRp8RJZdFNyrJcd+VqLXIlRavV9i3fgd6milaJgzqcMWmGBUSrvIgw1FPbCFaYHJwmV7lb06jmnD6lYu8IV/USd4/ppvMRfjLcW2PZp1UyO1V1kr2KY2Xa2YsaRf+RPixmu663WILc1OKdB4YGACgC7nksZR676mlM1Kl+2EUy9g69jZ2TMjKlYqqPj/GAmO/z8i55DcH6XrnOkNWwsSNSRjftWiKY+T4QvhNifogVd5tzsDPYdb1ZDpwcFQfoxr4g2RGCqNyV0njDPTW4bJJuHORb9AUh5O5kSszNCSFWUxAQ/fwvisScs6W2scb/magb7UpyRH7GUhMRiJNlNyXfkjX1PfmqIgKI51r8Y5axngT9yyhH25eEYWqFOtM1q6cSp1Uy9p45Lbc6AstkNXzIwtRfD+6lyNoknj8g+/yFchhl1G8pQTQCN3krrgAAAABJRU5ErkJggg=="/>
-</defs>
-</svg>
-`,
-        'Se permiten mascotas': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                'Se permiten mascotas': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="25" height="25" fill="url(#pattern0_40_3368)"/>
 <defs>
 <pattern id="pattern0_40_3368" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -126,70 +179,83 @@ export default {
 </defs>
 </svg>
 `,
-'No me gusta hablar mucho': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="25" height="25" fill="url(#pattern0_42_2183)"/>
+                'No me gusta hablar mucho': `<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="35" height="35" fill="url(#pattern0_286_9579)"/>
 <defs>
-<pattern id="pattern0_42_2183" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_42_2183" transform="scale(0.02)"/>
+<pattern id="pattern0_286_9579" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_286_9579" transform="scale(0.02)"/>
 </pattern>
-<image id="image0_42_2183" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADwklEQVR4nO2aaahNURTHf3imDMksPkiZknkKkTEKTxniqdeT3qP0lOFRMpYPJCmEVz54MkSG0pOphGQmUyJjRMaUMfPRrnVqtzvjPefcc5N/rQ9n3732Xv+719p7rX0O/Me/i/nAPeCRJm+B95q8BB4Cp4FyoBBoTA5hCmBlKD+Ag0DXtEkoAz5FIGLLb2AP0DybxlcFJgIXgD8xkNDlJTA4GyT6A7djNt6UX8DUJEnMBX4mTMISUfNMSILEiiwRsDT5AnSKk8S0FEhYIreAvDhItJF/xkpRSuMgsidlEhbwNOqqtJT93coB6RuFSGkOELBEZkchsj0HCFgiK6MQOZ8DBCyR1VGIJH2Ch5H5UYhcCTHR64SJFEUhcijgJKeAOsDOBImMiEJkc4AJ7gONNJ0S4EMCRJpFITLDZ/CLLhOoqm8t8MrHFdVKbgHmAKOBjsB0Kbb0vi+IiC4uRqgaZCtQ20e/GtAdGAuMA/pJyqPc0Aujga/afEcyJTAAOOmSsl8FBpE8lhnzqvp/h6xaIBRJYeO0EmvIHha62KBWKt9PWbH97uHX80ifiCXZeOugu9RzYIixBadF5Ijc1LzT2tZ7KV/TOhZL24EcILJX2mZpbcpWV9zQOhYEJKImfABUAi1CGKr6HhbdBQGJTNTa7ngNvkvreBlo6EOkj+G7FSGIVBi6vX2INJUd025TBZ8rhhuD/zAu30wiY43+R0MQOWbojvEg8hH4ZvRX8euJLSF2rZpaqv8ZGBqCyDDRUbrnZKygu9Y6AqCKpAxO2exij9Nbz7dsTJE4WAq0c/hd6XSTMUwsd5j/jQR8KKjBewL7tYHU9hwUtRzOpHMSV0FQrukdkJo9L67E8WYIvSYubvFTYssPlzSdmcSADoYhyo2iELGD18kVbTQz0qTOxAT9fNmUIZGhkvjZzyqY3VCm9XsscRsLCrWBvwe8jzWJ1DECeLeLXl1Jj+x+TodlxqgOPNMGPy/vSMISKdGeT7jobTQyXS8XzAj5hmFrEyAyyLjZVG8AEsE2w7iyGIm0NUrjuw6HZGyobwS+KnkXZUhEvQGeDPSQmNPjQrlULxJGc8lYdSNVCVovAJFijy3ZFuVa48kSWsvS6wY8AUYahPXfa8v7R7+Xp6vIMhoAxx0MUb4/EGhltOdpyaIydp+4qZ046rGh0pusIk9uyc17KEu+fNCfa3jkdAVGmj6JlKCC9ayPy/jdZaniye67hBSh0ohR4m5mHPzyWBEbG1K6G/BEe6lpKuUjmrKAOteBM1Hvef+DHMBfMsKgum2yeKQAAAAASUVORK5CYII="/>
-</defs>
-</svg>
-`,
-'El baúl está vacío': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="25" height="25" fill="url(#pattern0_42_2182)"/>
-<defs>
-<pattern id="pattern0_42_2182" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_42_2182" transform="scale(0.02)"/>
-</pattern>
-<image id="image0_42_2182" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACIklEQVR4nO2YQUgUURjHf0WpYGlhYHvJWxQePNSlOuYhPFkdI1kPHcSwizfpICRCVy91aj1FJ/HiSQ8ipqAFaVIdAgmNiFQKxSJkY+Q/8YpxkZ03uzPw/eCxs7Pf/P/ve9/Me/MWDMMwDMMwjDTRBrwAvgDFMtt3YBLoqFYSt4GfMRKIao8qncR5YEfmI8C5GFqngQfAL+nlfXTwMjAObGm0F4F7wFEn5ggwJdNR/JGX5jbQGlds44CSjwHHFdOlc1+BJvzyTNorQH0coR5gAGgBGoC7qk5RJk1KoKjffBN0/q30C77FL6ncgfhHfU7qFkuCVscv71s8mBp/Szx4di6QLN3y2tUUXzbBw30DGASeAwvOVPuQylCQ3w9gBngK9AHtQO4wAheB5QMe+iWghspQD7wpseZsKMEnwB2gzr24GfiswFXgsWapK8AZqkNOVehTVYLOb0YktqrlY58RnZwGTpBucsB1oN+p3LdwwD/pxN/MMkINMOG8abCnL+HilyXa1Pc1nPstixxT3/eynsg//bdEUkLRKpLWiqzr4CrZ45o7/Q5HLP1zhxCZ87x3j+M7FK6Qw05lwnayhFhjAkmU47umJCJfal8qqLOE4C3FzOIP7769Cn6nEfifU8AHxQTbZF949w3K9FoXvAduai/foBEJxRY971MS8c05olHtFXDWYxKJ+tYC94F5/TGwrRmjN+EdY22VfA3DMAzDIC38AQjRG/UiMyBfAAAAAElFTkSuQmCC"/>
+<image id="image0_286_9579" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADu0lEQVR4nNWaSWgUQRSGP0eNJLiiHgziweVgcF/iwQU8qLjk4EE9CO4XD0ERUU8i4hJFBXdQ0YOCG+ICCoqK68mDIm64BuO4x92oaBIp+BuK2D3Ty8x0+0MzVNV71e+fqlf13psBb4wHPgMTiR+TgC/6DIwdQCOwgPixULbsDKN8UcoVHuNFwDrgJZAGqtTnF0H0K2SLsSkQ+gFvpFzmIVOlcfsxfX4RRL9M48ambn4mHwjcsiZuAIo9ZNMuhpg+vwiiXyxbHLnLQC+vibsCtRJ8DZwGDuTIkFzoHwBOAR8la7ZkZzfBrRI4B7QOuTXWBiASVr8DcFXyxsf+wU0Nlvs0pEjGpCM4e1j94bL1ntvgJw22Ifkoka11boN1GjRCSUeHTETua3Aoyccg2frYbXC7BveSfKyWrfu9LsF64DcwhuSiDPggImO9hDZK4AewG5hFcjBTx+1b2Xgmk3BzYJt1iz4nOai27pvzQHs/SkO0zRoSchyXyJ4/wDigWRDlpwEvyHxioGx5EEb5uJTnED9my5YjYZQXZTrismACUAN8Uw4RKrOzcDhKkufkACZ0aRVQt8YlIFwVxgighRXx9gw5BzeyZIlecIwvBZYCv9QOszIV0r1LBFRqkmMhiThYpvaFEDacla7Z6qHRCfipo69PBCKlaptKSBD01hVgLuiORMRmGXEwAhGvvmw4IR1jQ2R01jdpVmVYAYmMkvx3oAs5wnLL4VoVgEixsr9GvTtnMBPfCZBXRyWyxfrigqTPvtBXTme22OQ8EpkqB/+pmC8vqLT27eA8ECm3Um7zrrxim170SquUKyL9gXeS2UUBkAIO6YW1HidZUCKmTvBe4ycVlhQExgGP6sVfgekRiEyzttPJfDi3n5XZYBm4B2jrg0im55aIxYI5WhWnZjwvApFGnVgzYuJCd+CKi1FB0FL5htF7RIxopvvltgeRlCqEXo8pnKesWoGJr9ZnOebzipQHEZug11Pt0mcKDvNj4uJK5LQKa16P42dOuL9EK1KviKI0KUT8bM1Z0nviEspP4T8hYpBSybZexUKDS5rL1LMSQ+S6h2+YCGGTjDXth5LvKcc3sV07EkTkWhZn/6LPFZJfqfY+YkLQrTWiyYXYQz7zTH2jiQlhfMTRMRerwQC1X8h3SKqP1Oj/Lk115qq9OAk/PPn1EftnC6fPCTyPqB1b3GUb5ecPA8Y/RlrbqGkkEFuI4pfIWpdTa4017iRakQtz+SZSJDJprYQhYSdVTr244ImWjbA3e+g5/gKMPsNeaaBMSAAAAABJRU5ErkJggg=="/>
 </defs>
 </svg>
 
 `,
-'Viajo hasta el destino sin paradas': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="25" height="25" fill="url(#pattern0_43_2189)"/>
+                'El baúl está vacío': `<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="35" height="35" fill="url(#pattern0_286_9581)"/>
 <defs>
-<pattern id="pattern0_43_2189" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_43_2189" transform="scale(0.02)"/>
+<pattern id="pattern0_286_9581" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_286_9581" transform="scale(0.02)"/>
 </pattern>
-<image id="image0_43_2189" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABsklEQVR4nO3Zu0oEMRTG8b+IsqtbeHkGsRZElEXFhzjY2Nn4CCv4ONpYyL6B4lZesBa0kMVeLEREMBJIMSxZnWTGJA754BR7mzM/kgkzG8jJyclpWtrADiCRqmvOoVLWgGdARa4ncy5emU4EoQqYlg9kBhgkAFCF0tPMK7PAeQIAZUpfMzQBI1UgKWHE5+Q7lteD/wgR4CixkRFfiP7xYcmR6ZZcCZeAfeAqNESVxFwDc449NOg9JET9IWYX+AoJUR4Y/fm8qYkfep2FhihHTL/wnp5Cx8Cipdd2DIhywFxYfnti6TUFvMWAqApL8+uYafYYC1J2ZEbrE5i09HuICfHBXFp6adhHbIgL5h5YtvTajHWxK0utlMDcmqV4NKcpQTYsx7AtAHfAQuE7ew49JBZk3MjcmJE5iHGLojwh4zAvjsdXKUDqegSQWJD1mh/OJBakX/PDmcSEqBoxEhtSF0ZSgNSBkRCQslUFIylBqmAkNYgvRlKE+GAkVYgrRnwg3UAQF8yWD6RtNldCYXq/3M4MfTd6MNtdKWCGwCoV0zLTLNTmZ8fyf7HeBszJycmhOfkGeuEXpaahp1sAAAAASUVORK5CYII="/>
+<image id="image0_286_9581" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACIklEQVR4nO2YQUgUURjHf0WpYGlhYHvJWxQePNSlOuYhPFkdI1kPHcSwizfpICRCVy91aj1FJ/HiSQ8ipqAFaVIdAgmNiFQKxSJkY+Q/8YpxkZ03uzPw/eCxs7Pf/P/ve9/Me/MWDMMwDMMwjDTRBrwAvgDFMtt3YBLoqFYSt4GfMRKIao8qncR5YEfmI8C5GFqngQfAL+nlfXTwMjAObGm0F4F7wFEn5ggwJdNR/JGX5jbQGlds44CSjwHHFdOlc1+BJvzyTNorQH0coR5gAGgBGoC7qk5RJk1KoKjffBN0/q30C77FL6ncgfhHfU7qFkuCVscv71s8mBp/Szx4di6QLN3y2tUUXzbBw30DGASeAwvOVPuQylCQ3w9gBngK9AHtQO4wAheB5QMe+iWghspQD7wpseZsKMEnwB2gzr24GfiswFXgsWapK8AZqkNOVehTVYLOb0YktqrlY58RnZwGTpBucsB1oN+p3LdwwD/pxN/MMkINMOG8abCnL+HilyXa1Pc1nPstixxT3/eynsg//bdEUkLRKpLWiqzr4CrZ45o7/Q5HLP1zhxCZ87x3j+M7FK6Qw05lwnayhFhjAkmU47umJCJfal8qqLOE4C3FzOIP7769Cn6nEfifU8AHxQTbZF949w3K9FoXvAduai/foBEJxRY971MS8c05olHtFXDWYxKJ+tYC94F5/TGwrRmjN+EdY22VfA3DMAzDIC38AQjRG/UiMyBfAAAAAElFTkSuQmCC"/>
 </defs>
 </svg>
 
+
+
 `,
-'Hay puertos USB para cargar': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="25" height="25" fill="url(#pattern0_44_2193)"/>
+                'Viajo hasta el destino sin paradas': `<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="35" height="35" fill="url(#pattern0_286_9582)"/>
 <defs>
-<pattern id="pattern0_44_2193" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_44_2193" transform="scale(0.02)"/>
+<pattern id="pattern0_286_9582" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_286_9582" transform="scale(0.02)"/>
 </pattern>
-<image id="image0_44_2193" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACTUlEQVR4nO2Yv04UURTGf+CKhRITO5baQtCOlsJErQQb0ULhCYgIEv5YGAuDGJ8BCiS+BfgORtRohAoqGoQQsWDMSb5NJpOZdXbn3mWG3C85yZ0zc+beb87fXQg4X4gcy5khECF4xA9CaBFCyw/+Vz6L3u8YApGyeyQKnZ3gESc4N6EVUAb0AO+APQ+htQssaw/vWPZAIClvO0HEhyeSstcJIr5JRJ2qYHkPcgLMAXXJvHSVIzKfYrtQRSJ9KbZ9VSRST7HtryKRhRTbxSoSORGZujyxWNVkjwqKdwQitPYRvgGHEluvAw+Bi1XzSJQhP4AHVSDyBXgODAKXJbaeBrb0zCmwBHSXkYhVtEngQpO97d4z4K9slspGxEjcaeEMd0XGPDNaJiLmiTy4BIxpPRXLmbYKgI+caBZODXQBH2TzEqgBX3Vt1axlHDomYl82D17r+QPglnQz0hnBlrHpmMhAjj2fKB8sl27H9Df1ju/tELnvmEhv4qvfSOw3DPwRkfHEvV694zdt4o0HIpbEdn0EPJXuOrAv/auUcxQm0vDMhoOcsWaHGt96TL+iimTrVSV7EoVCyxU+6hDWseOYAI5jhD41+Z9rVs+scYZ4rENspZTfIWAH+AxczbCvaZhsu/zmRVYoNWBN7Jd0NnYkcU0/yLIwXbQhuiKCpthTjRs2duTFPRcjiksihvfS28GmFDJZqMkTToZG10S6YmQi5cyMKtIVia1fxEYSJ2O8L4wA2znKteWE93AqCgudR+onP9UcrU+ZJ2yeyvyp+w/qwKHmdmk1ZAAAAABJRU5ErkJggg=="/>
+<image id="image0_286_9582" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABu0lEQVR4nO3ZP07DMBiH4XdAcAKKKLC3R6FF3IEZ9s5UnAkWysIALCDBwCUYaGGA6UOWHClYbeI/af1Fyk+yqkq24idOHFuGLl26xOYEmAHfgGQuX7Yv41DElYLOy4oyDRmJotEnMCB/+sAE+LX9Gvk0urOV5/b3DeihIxPbp1ufygtbeWARmjD90k2uTfFYmewCr/b/O7BP/kipf0EVtWEkFqINIykQTRhJhWjBSBMQ7OzlzmahHzWzWngELoDtXJBlmJQv9QtwQCaIi0ktzwEjI01Dmsac54SswtTlELh22jzkhizD+CxnjhyIWRplh8ROze7jlR0yqpiaWwX5icC4j9aHBogEYgzixoHca4GI3cGdLnlnfMqZJkjVyFQVs1zZ0QYJxTwBexHX2gikDlMsGs3XfCvyWhuBrHMLILkhTWFEA6QJjGiBpGJEEyQFI9ogqQtNVZAYjGiFhGJknZAm4otRDzHxwbQC4oNpDaQO0ypIFca7f8VBjzlUyZ2es9Mchhz0zGxlc8yFMsw85OhtXNq2TpSMzLCEMOXYt+G0YkeXu1yG3oWRHcLinclZFrYv3iPRpUsX/uUPGV48DJpKg8AAAAAASUVORK5CYII="/>
 </defs>
 </svg>
 
+
 `,
-      },
-      tripType: 'revisar', // значение по умолчанию
+                'Hay puertos USB para cargar': `<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="35" height="35" fill="url(#pattern0_286_9583)"/>
+<defs>
+<pattern id="pattern0_286_9583" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_286_9583" transform="scale(0.02)"/>
+</pattern>
+<image id="image0_286_9583" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACiklEQVR4nO2Yy2oUQRSGv+hkXGgQ3GnWLrws3Si4ENSNqAS8LLw8QTAmXhYuVBAyEcE30IWGgA8RfAcxKoqXhZOVIKiIukjLgb+haKbHnq7Tmc7YPxRUn646Vf+caw80GC0kzmNoGDkisWiIeKGxSAaNa3lhZF0r+Uc6zXvfEPHCyFqkLBoiXmgsUgfXagP3gdUKut8u0NEZlWOhAgLZMb8eRLo67GAFug8FlqkcVftzsl7x8t8RaQdJoavYam9EIgs9grjjqD8aRQ/qlZ5XHfVHo+hBaXYLx2dH/dEoelCnZH1I6kakLTJdWWJ+owZ7WSQNkRr9Yu1A/2vgu4bNF4EzwHjdiUwBHwo0lG+B03UkMgY8DPS+BK4C+4CtGjafBVa0Zk3JY1OdiKQkfgPTwOY+a+3dFeCPR7vvSWQqIHF0gH3HRMYsc2rYRLYAn6RreoA9ZzWfCWJmfJhEzgcx0c+dwlh6qj23gBbwSs+WzQbGN23eSRyeSY8FdhHc0fqvCn7DnGRGcGAsa/MN4vBRevYWWHtB8WCxdCSQ75eON2UucEKbfwE3gV1llAA/pWcikN0F9mTWHdZZRuRS5t2EdJiXlMI9x39MUiIWxPb8A7go2W7gi+S3e9wjmkhqmWW1EDFEUn+3wrcYyB8pI9n8sYI9iyjXislsoXxJc6vYIS4HbmfjeZ/2/7rWPHG+f88L58nT9LvSI/0eUDJ4AWzPOaOlZrJ0+vUiYkXsvZ6t7chiBzDZ54zZ2ILoRQR1sWtqN6ztKIrjHi2KJxHDA8nsYjNymTy0ZAmXptGbyFhAJlHMzCkjbdOw+bWgJXFp46vCyQE+rCp1Jw+Y65xTPXmn4mh1yixh/VTup+5fbyvElxOWwWsAAAAASUVORK5CYII="/>
+</defs>
+</svg>
+
+
+`,
+'Hay una sillita para niños': `<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="35" height="35" fill="url(#pattern0_287_9588)"/>
+<defs>
+<pattern id="pattern0_287_9588" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_287_9588" transform="scale(0.02)"/>
+</pattern>
+<image id="image0_287_9588" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEnUlEQVR4nM2aW4hVVRjHf046pWli4gUyU8iwbKgXdUKjfCpqIBDFSaGXfBnEwqdezZTKLt5BI6TppSIisSv4oBZeErFsRlApgrlEUDaZiTOpTXzwX/Cx2HvP2WfOPmf/YTFn1vq+//rWWWt/l7UPFIMFwDagG/hHrVt9NlZ6NAO7gBvAcEqzsZ2SLSWagUMy9hqwHVgE3K62GNgBDErmUFkXs0sG9gAtGXIPAb2StZ0pFRboyFwbYRF+MYPSeYASYZu+YftbKXZK521KhHMyamEOncXS6aJEuCKjJubQmSidvykRLlexkDuk8xclQpeMMndbKVql8yMlwpsyyuJEXne9lZK53+tyqeZaR8LDwJB07qdkeEvfcO8Ii7FF9En2DUqIccBnMnBQcaJVDsDaIzpOQ5I5KJ1S4V7gfeC3jGQxbibbKd2GYwzwInA1xwLidlUcxtUQTAO+kDH/AXuBOTn0TXafdIfFNY06YxnQLwN+B9pGwdUmDuPqF3fhuAXY6Aqnw8BdNeCdAXztdndHkY7gbuAbV+Vt1MJq/bz9qzm+A+ZSYzwDXHKF06MUh0XAzy4PW1UL0lu1zeGB/BS4k+IxGfjQeTZz7ROqJTP//oOrwTtS5KYqHlRTtprOe+JIQofmHpYtuWPOTOAXEZzLKF+XuXTDdi0vwk73ZXirFle4/aTdqhidUvwqZUvHAluAm1Fwywuva1xbxB1jgmwxuXfzTDAgpXsSxsyTnHDea3MNFrLZufQTKd5qjsb/rKbimxX1t8uTBO/1WGRQtQtBXD3OW9lcsfvPXVF+IqXPtZjZ7rhZ+xiYItmmUeRZoRmHYYq4Q3+nFjDLpUM2XjHuA/5ImNDucNdGsu01WEgcK9ZqrljuUjWey1KPj3TMevUgxklhk/Mo1QSuVdLtdrsSYHO9ouN2WTtRWMrfnmFIJTCds+JYQYMwHrgoIzaMgmeDOC6Is+7Y6s7u9SqSyCYliaH0tfY6dcZC+f2bqr2DIaeBJyrQf1KyQe+guG7kvHYdFZrdhVy4tH7KxQBr3wLPRhWffV6tsSDXI11/Ed5Vr/cmm1LOtKURL7mAmdXMtb4GTHL6tzkP+HLRi2hR4WPHYEnCuD0j+13uNBAZH3Kz/SnP0xLJ2BwPFrmQcG+1O2HMduSAS/tXJsisdGn5gZSEdLd7bgpDiLaWNsQ19ykXfZdmcCx11eYp6SblVFcoEN2aZH3U/6X6rYaZXwHPfFfvWA7l8YL6LVAWhjZ3qeaLrVfV36uibCTMdC9ETTegxV32PU3BCA/zeed17OrmqHO9WVc545wLPupkjeu8cwaFY7yr5T9w/dNdLLF37GnY7mKI6QQY17C465aqzHPxoiN6wTmUkQSu0NiQZAM6XNE0jzpjuS4PBvX6IGC9jBpQQRYw28UV7yxaxWFcxtnQV259kRsN8WSP69vj4kfADHcLY1wNg914HJEhx3ShZ3hcfWec7PfqszEke0x9R1JuT+qK6S4mHNc7wXXu/4CT6lsnmeMu9viHvqGw35P8mpAcrnEyzyWM95fttyjoW31Hgc4ygOcTZKzPxkzGZGu2E/8DhxbaHBpvadQAAAAASUVORK5CYII="/>
+</defs>
+</svg>
+`,
+
+
+            },
+            tripType: 'revisar', 
             tripTypeIcons: {
-                revisar: `<svg width="35" height="35" class="ml-3" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="35" height="35" fill="url(#pattern0_47_3305)"/>
+                revisar: `<svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="35" height="35" fill="url(#pattern0_286_9586)"/>
 <defs>
-<pattern id="pattern0_47_3305" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_47_3305" transform="scale(0.02)"/>
+<pattern id="pattern0_286_9586" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_286_9586" transform="scale(0.02)"/>
 </pattern>
-<image id="image0_47_3305" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEJklEQVR4nO2ZW4hVZRTHf42j44WsMQ0nxCyTimIwKy+gSOFDOfSQYPaSgvpQEr0o6ouRWtDFQhE1BRF6iUSDhFC0wEy8pC8pKD4YmhXK5F0c1GZOLPhvWBzOPmd/+3KO4vzhg3P2Xt9a67ut77/Whl7cf3gCGMU9jmHATbWh3MN4Hiip2e+7Dk8DZ4FNOQ5kI9AJtFNHvJHQwaQDsYnpkdwM6oh+wHkZXpfDQFZLphPoT53xiYxfAwZnGMgA4KJkPqUBGAn8JwfezTCQeXrfrVDdEOyQE79nGMgRvf+RBuJ15+j4Cu9ty/2j9mCF9+2uf0cRDvYBtgO7gOFV5JqAQ7rwnouRaVGrhMeBK8B+6YrDNK26bcMgDAHuaKZOA09VkTUHHiI94gYZ4VVNlPnyAynwDnBbCi5UmfEiMQG4IR/+BsZkOQORoo8DV9QGPhWYqTZVz1oD9Hwl23ZnPUNGvAisAtqqyNjWehvYAJxwBziumcx6YFaNbdkGfJRlJZLiWWANcD2B83GtC/gGeIEGYBywt4JTJ0VZZiq02ow2q7Xp2VtajZMV+u+V7sIxVCy12xm/BHwBjE6hb7S27SWnr1s2LJcpBHZh/esMGsFbAAzMQfdA6ep0+i/mfUn20YGLVqFbe7qIjK9VZy7icD36b1szE4xi7HGzdCaGiuSN8bIV2d1ThWHXhIXFA07Zz8Cj1A+PADud/aO6n4LwsDhUpOTzGlyoKDQpkER+HJZvidC/bCVWpswg7fAeFDO4IZ3vAX0zJHElTXCiLHKz62SHPBTDNHNxF+ChlKF1hdOxpZbwAif8dcqt8GuC23xfyq26yel4vxrTjNjufm2PUMwKoCZ2w6eh/AfU33ydWC7QrMTFBP6qQRCrYXvAQLaltNEmSm86jpefuUXOgFH3tDgWMJC4PD8JOpyepT7djHKO75ywZYUfhIQ7V0hI0n4L0DscWAiMcM+2So9lj0/ag8/04ErZltqZYgtsDBhI0mDygGPaRo0iPCafSxoDkxXvy0uVS5zR6QmNvuxKn9WaybyUUOds16+8+GA+/1KLNvVz2d7pAJb7ZYKBGHVPgiGqF5QUrVKzi1fcDNe8hIQm3cRRFca3O8r9mxJuqR2u31gyYr1zZG5AP8uzP9Sh3KrfIbn3Emd3OTmgxUWjLq1S0ZjhVvQn5US5YJTLDq3QMIni0AHckq1zRaQOVha6LANXAyJZaFGwy9Wy7ANQIZio7yElpaOLc8pT+iqSldQ66/HNsV3h2GduSe+ESpgizhTpO6V6Wd3S0N1lYfXbgLNjq/iavon4C/T7mM8PhcLi/Bz3LdHP6Abt96je265PA/NFM86V9flTRb2GwkjlMtH/UmD7Q+dsEHcRmoE3axSye0T11yrMNqKgEYxBun8miEyOzKkq2YteUEf8D6V8uXcmN1bmAAAAAElFTkSuQmCC"/>
+<image id="image0_286_9586" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACh0lEQVR4nO2ZS2sUQRSFv4BmESPqRtSMwfhK3OoiLmcTVzJm49ZXxEV+g/gW9U8kLicu9QeooEbGiYOvjUZ8bIwmEXVjDPig4DQUbXdNT0xPV7AOXBi6zq2+h5p761Y1BAQEBAQELD+2ABeAKnDDE6sqps1ZRWwH5oHfntoc0JdFyHU5TAKjwClPbFQxmdjGswhpiDyEfxhSbCbGpnguchn/UFZsJsamCEJi2AEMAyOyYT1bEStSAq4B7x1V5x1wFejxUchq4Czwwwr4O1ADbspqehaNLwBn5OuFkD3AlBXgfeAo0JXA7dLYA4tfBwaKFrIPmBX/I3CE7DgsH+P7GRgsSsh+4Ku4j4CNtI5N1mqaucycbRXSC8yIdxvodnC3ytKwFrijuWY0d1uEdAKPxXkCrEvhmXL72sqFaaCSwl0PPLNyprMdQi5r/IujeTMifiWU3p8OMTuBb+JdzFtIP7Co8WMp/h2xlYjbK8e7R8RZ1LtyE1LV2D0FnITeDK14Ws50qHwbzkSeQiaWSUipaCED1l/ruGOOaYeIlw6/k+36axlcsuq+OU0moaLETkr2gyk+u6xkN0fatpTfujhPHeW3osS2VyJNxAbghXg1R/+V+4ZoNrU0lBw5gXzvaq4PTbi5tyhTajeWclvTsPalwaKaxr3AJ6vxM5cErTSNke98kU1jhH41jVEuTKqireFvdGssug2JcmI3nhysVumQtBA7OJmicEtWjx28zPhp+Xp31O0BrgBvHfvIG/VrJj9WxC1KH3AIOCEzv7f945zlIoTkgfJ/KaTh8ZXpgVauTMc9vsR+qNjGsibpXIZWvCibbaVomI8p5z380HNuia1QQEBAQEAALvwBq3veJ+4ui0AAAAAASUVORK5CYII="/>
 </defs>
-</svg>`, // SVG иконка для типа "revisar"
-                automaticomente: `<svg width="35" height="35" class="ml-3" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="35" height="35" fill="url(#pattern0_47_3304)"/>
-<defs>
-<pattern id="pattern0_47_3304" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_47_3304" transform="scale(0.02)"/>
-</pattern>
-<image id="image0_47_3304" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACjklEQVR4nNWZTYhNYRjHf8MYDUryNRHFFDaSuncMZSMl5WPjYyWJpCzIgm4WlJK5oixlQxMrFlNEKdRVJB8bRureYUGUkeRjfAyjt/7q7XTOO6cR53l/deqc9/zv7Xm6/3vO8zwv/FtGA3eBoRzHALAKo6zNmcSfYzNGuaYAKwHNCmleAi0YpB34CXwDpgd0l5XIAYxyUgF2BzTzlewnYDIGaQXeKZHOgO60NKcwynYF+CigmQp8AQZlQ5PcVyIuoSwOSXMRoyxVgO+B8RmascBr6ZZhlG4FeCKg2SHNPYwyRW/oX8C8DE0T8ESJbMQoFQV4NaBZLc1zoBmDjAL6FOSagO66NHsxyjoF+ELFYhoLZbsPwESM11X7A5pz0lQxSrtKja/AtAzNDNVdP4DZGK+rzgY0R6U5j1FavbqqnKEZB/RL04HxuuphQLNbmlsY5oGC3BbQPM3ZIdYoiE4F0C+LZXEzZyKPKbiu+pvH6RKV8u6pt5wC6yoXwNwRfkeLfoVCm6uKAnA990g54tVdEyiIRk7fu/9HGouA7ypZVlIgtZyJ1FM+2+w97c5gnOMKtCvl3kHdewVMwjgNBVtKGQEN6N56jNOhQPvUEfo9Sy3HvMu8rfZp/a3GQcRoqznAR61vIALKKbZq8lrcHiKhmmKrXVpz5X4bkdBI2GqmhnVubQuRUE6xVY/WrhAR1YStturaTU1mERF1z1ZtXgu8k4goJ2x1Sdc3Ei/FqGy1SeefLe99DGcrt8X8Rud7iIySZ6sLOr8TGJ2a5ZiC7/U2/xcQIfVEM2V2qzmPrYa8DdAxREiXl4QbUC8mUupeIoeJlJKXRK92a4nZVoOBSXwUPLO+A0VO3Hbb7WEG2P+F31f8AqKLGR/iAAAAAElFTkSuQmCC"/>
-</defs>
-</svg>` // SVG иконка для типа "automaticomente"
+</svg>
+`, 
+                automaticomente: `<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+</svg>
+` 
             },
         };
     },
@@ -204,71 +270,70 @@ export default {
     },
     methods: {
         async handleSubmit() {
-    try {
-        this.isUpdating = true; // Show loader
+            try {
+                this.isUpdating = true; 
 
-        const selectedIcon = this.tripTypeIcons[this.tripType];
-        const additionalData = {
-            date: this.tripDate,
-            time: this.tripTime,
-            type: { name: this.tripType, icon: selectedIcon },
-            options: this.options.map(option => ({ name: option, icon: this.optionIcons[option] })),
-            description: this.newMessage.text
-        };
+                const selectedIcon = this.tripTypeIcons[this.tripType];
+                const additionalData = {
+                    date: this.tripDate,
+                    time: this.tripTime,
+                    type: { name: this.tripType, icon: selectedIcon },
+                    options: this.options.map(option => ({ name: option, icon: this.optionIcons[option] })),
+                    description: this.newViaje.text
+                };
 
-        if (!selectedIcon) {
-            console.error("Иконка для выбранного типа поездки отсутствует");
-            return;
+                if (!selectedIcon) {
+                    console.error("No hay ningún ícono para el tipo de viaje seleccionado");
+                    return;
+                }
+
+                await updateTrip(this.tripId, additionalData);
+
+                this.showModal = true;
+            } catch (error) {
+                console.error('Error al actualizar el viaje:', error);
+            } finally {
+                this.isUpdating = false; 
+            }
+        },
+        confirmModal() {
+            this.showModal = false;
+            this.$router.push('/viajes'); 
         }
 
-        await updateTrip(this.tripId, additionalData);
-
-        // Show modal on success
-        this.showModal = true;
-    } catch (error) {
-        console.error('Ошибка при обновлении поездки:', error);
-    } finally {
-        this.isUpdating = false; // Hide loader after completion
-    }
-},
-confirmModal() {
-    this.showModal = false;
-    this.$router.push('/viajes'); // Redirect after modal confirmation
-}
 
 
-
-,
-        async handleCommentSubmit(messageId) {
-            if (!this.newComment[messageId]?.trim()) {
+        ,
+        async handleCommentSubmit(viajeId) {
+            if (!this.newComment[viajeId]?.trim()) {
                 console.error("El texto del comentario está vacío");
                 return;
             }
 
             await saveComment({
-                viajeId: messageId,
+                viajeId: viajeId,
                 user_id: this.loggedUser.id,
-                text: this.newComment[messageId],
+                text: this.newComment[viajeId],
                 displayName: this.loggedUser.displayName || 'Anónimo',
                 rol: this.loggedUser.rol,
             });
 
-            this.newComment[messageId] = '';
-            this.fetchComments(messageId);
+            this.newComment[viajeId] = '';
+            this.fetchComments(viajeId);
         },
-        fetchComments(messageId) {
-            subscribeToComments(messageId, (comments) => {
-                if (!this.comments[messageId]) {
-                    this.comments[messageId] = [];
+        fetchComments(viajeId) {
+            subscribeToComments(viajeId, (comments) => {
+                if (!this.comments[viajeId]) {
+                    this.comments[viajeId] = [];
                 }
-                this.comments[messageId] = comments;
+                this.comments[viajeId] = comments;
             });
         },
     },
     async mounted() {
-        subscribeToChatMessages(newMessages => {
-            this.messages = newMessages;
-            this.messages.forEach(message => this.fetchComments(message.id));
+        subscribeToViajes (newViajes => {
+            this.viajes = newViajes;
+            this.viajes.forEach(viaje => this.fetchComments(viaje.id));
         });
         unsubscribeAuth = subscribeToAuthState(newUserData => this.loggedUser = newUserData);
     },

@@ -1,6 +1,6 @@
 <template>
-    <BaseHeading1 class="text-center text-3xl text-gray-900 mt-4" >Cambiar foto de perfíl</BaseHeading1>
-
+    <div class="content ml-10 ml-10">
+    <BaseHeading1 class="text-3xl text-gray-900 mt-4" >Cambiar foto de perfil</BaseHeading1>
     <div class="sm:col-span-4">
       <h2 class="block text-sm font-medium text-gray-900">Previsualización de la foto elegida</h2>
       <div class="mt-2 flex justify-start">
@@ -26,18 +26,17 @@
 
     <div class="flex gap-8 items-start mt-8  mb-40 max-w-[60%]">
         
-        <!-- Форма загрузки фото -->
         <form 
             class="w-full max-w-[60%]"
             action="#"
             @submit.prevent="handleSubmit"
         >
             <div class="mb-4">
-                <label for="photoURL" class="block text-sm font-medium text-gray-900 mb-2">Nueva foto</label>
+                <label for="photoURL" class="block text-sm font-medium text-gray-900 mb-2"><strong class="text-gray-900 text-xl">Nueva foto</strong></label>
                 <input
                     type="file"
                     id="photoURL"
-                    class="w-full p-2 border rounded  max-w-[60%]"
+                    class="w-full p-2 border rounded  "
                     :class="{'bg-gray-200': editing}"
                     @change="handleFileSelection"
                 >
@@ -50,9 +49,8 @@
             </button>
         </form>
 
-        <!-- Превью фото -->
-
     </div>
+</div>
 </template>
 
 <script>
@@ -92,7 +90,6 @@ export default {
                 text: '¡Tu foto de perfil fue actualizada con éxito!',
                 type: 'success',
             };
-            // Переход на страницу профиля после успешного обновления
             this.$router.push('/mi-perfil');
         } catch (error) {
             this.feedback = {
@@ -118,4 +115,12 @@ export default {
 };
 </script>
 
+<style>
+@media (max-width: 640px) {
+ 
 
+    .content {
+    padding: 20px; /* Меньше паддинга на мобильных экранах */
+   }
+   }
+   </style>

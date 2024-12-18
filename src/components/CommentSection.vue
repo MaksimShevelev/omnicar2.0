@@ -9,7 +9,7 @@
 
         <form @submit.prevent="handleCommentSubmit">
             <textarea v-model="newComment.text" class="w-full min-h-8 p-2 border rounded"
-                placeholder="Escribe un comentario..."></textarea>
+                ></textarea>
             <button type="submit"
                 class="transition-all py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900">
                 Enviar

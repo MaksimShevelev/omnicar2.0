@@ -4,10 +4,10 @@
       <div class="mx-auto aspect-[1155/678] w-[72.1875rem] bg-gradient-to-tr from-[#239e61] to-[#1d7e4b] opacity-30" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
     </div>
     <div class="mx-auto max-w-4xl text-center">
-      <h1 class="mt-4 text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-3xl">Crear viaje</h1>
+      <h1 class="mt-4 text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-3xl">Crear viaje</h1>
     </div>
     
-    <!-- Grid layout для карточек -->
+
     <div class="mx-auto mt-4 grid max-w-lg gap-8 sm:gap-10 lg:max-w-4xl lg:grid-cols-2">
       <div
         v-for="(tier, index) in tiers"
@@ -15,13 +15,13 @@
         @mouseover="hoveredIndex = index"
         @mouseleave="hoveredIndex = null"
         :class="[
-          'bg-white/60 shadow-2xl p-8 rounded-3xl ring-1 ring-gray-900/10 sm:p-10 transition-transform duration-300 transform group',
+          'bg-white/60 shadow-2xl p-8 rounded-3xl ring-1 ring-gray-900/10 sm:p-10 mb-8 mt-8 transition-transform duration-300 transform group',
           hoveredIndex !== null && hoveredIndex !== index ? 'scale-95 brightness-75' : 'scale-105 brightness-100'
         ]"
       >
-        <div class="relative">
+        <div class="relative sm:mb-4 mt-4">
           <h2 :id="tier.id" class="text-green-700 text-base font-semibold">{{ tier.name }}</h2>
-          <img :src="tier.image" alt="Описание изображения" class="mt-4 w-full h-auto rounded-md">
+          <img :src="tier.image" alt="Descripción de la imagen" class="mt-4 w-full h-auto rounded-md">
           
           <ul class="mt-8 space-y-3 text-sm text-green-700 sm:mt-10">
             <li v-for="feature in tier.features" :key="feature" class="flex gap-x-3">
@@ -57,7 +57,7 @@
 import { ref } from 'vue'
 import { CheckIcon } from '@heroicons/vue/20/solid'
 
-const hoveredIndex = ref(null) // индекс для отслеживания карточки под мышью
+const hoveredIndex = ref(null) 
 
 const tiers = [
   {
@@ -67,9 +67,9 @@ const tiers = [
     image: '../public/12.jpg',
     features: [
       'Conductores verificados',
-      'Creación de solicitudes para eventos',
+      'Creación de solicitudes para los eventos',
       'Notificaciones de viajes disponibles',
-      'Cancelación gratuita de reserva',
+      'Cancelación gratuita de la reserva',
       'Viajes económicos y seguros',
     ],
     featured: false,
@@ -82,9 +82,9 @@ const tiers = [
     features: [
       'Pasajeros verificados',
       'Ahorro en combustible y peajes',
-      'Creación de viajes для eventos',
+      'Creación de viajes por eventos',
       'Personalización del viaje',
-      'Calculadora inteligente de costos de viaje',
+      'Calculadora inteligente de costos del viaje',
     ],
     featured: true,
   },
@@ -100,12 +100,23 @@ const tiers = [
   .grid {
     grid-template-columns: 1fr;
     gap: 5rem;
+    padding: 10px; 
   }
 }
 
 @media (min-width: 1024px) {
   .grid {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .absolute {
+    padding: 8px; /* Паддинг для маленьких экранов */
+  }
+
+  .grid {
+    padding: 20px; /* Меньше паддинга на мобильных экранах */
   }
 }
 </style>

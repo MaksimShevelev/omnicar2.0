@@ -4,18 +4,19 @@
 
 html, body, #app {
   height: 100%;
-  font-family: "Lato", sans-serif; /* По умолчанию для всего текста */
+  font-family: "Lato", sans-serif; 
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Nunito", sans-serif; /* Только для заголовков */
+  font-family: "Nunito", sans-serif; 
   font-weight: 600;
 }
 
 #app {
+  width: 100%;
   display: grid;
   grid-template-rows: 64px 1fr 100px;
 }
@@ -40,7 +41,6 @@ h1, h2, h3, h4, h5, h6 {
   @apply flex justify-center items-center h-24 bg-custom-green-dark text-white; 
 }
 
-/* Общие стили */
 .footer-link {
   @apply text-center text-white flex flex-col items-center rounded-t-lg transition-all duration-200;
 }
@@ -55,42 +55,40 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-/* Стили при наведении и активации */
 .footer-link:hover,
 .footer-link:focus {
-  @apply bg-green-500 text-gray-900 rounded-t-full p-10; /* Максимальное закругление */
+  @apply bg-green-500 text-gray-900 rounded-t-full p-10; 
 }
 
 .footer-link:hover svg,
 .footer-link:focus svg {
-  @apply transform scale-150; /* Увеличение иконки */
+  @apply transform scale-150; 
 }
 
 .footer-link:hover span,
 .footer-link:focus span {
-  @apply opacity-0; /* Скрытие текста */
+  @apply opacity-0; 
 }
 
 
-/* Медиа-запрос для мобильных экранов */
 @media (max-width: 639px) {
 
   .footer-link {
     @apply text-center text-white flex flex-col items-center rounded-t-lg transition-all duration-200;
     @apply flex flex-col items-center text-center transition-all duration-200;
-    flex-basis: 20%; /* Разделяем на 5 равных частей */
+    flex-basis: 20%; 
   }
 
   .footer-link:focus {
-    padding: 15px; /* Устанавливаем паддинг 5px */
+    padding: 15px; 
   }
 
   .footer-link:hover svg,
 .footer-link:focus svg {
-  @apply transform scale-105; /* Увеличение иконки */
+  @apply transform scale-105; 
 }
 
   .footer-link svg {
-    transform: scale(0.7); /* Уменьшаем размер иконок до 70% */
+    transform: scale(0.7); 
   }
 }

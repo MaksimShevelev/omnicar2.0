@@ -12,7 +12,7 @@ export async function getUserPublications(userId) {
         });
         return publications;
     } catch (error) {
-        console.error("Ошибка при загрузке публикаций:", error);
-        throw new Error("Не удалось загрузить публикации.");
+        console.error("No especificado:", error);
+        throw new Error("No especificado.");
     }
 }

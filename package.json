@@ -18,11 +18,15 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.1.5",
+    "@mapbox/polyline": "^1.2.1",
     "@mapbox/search-js-web": "^1.0.0-beta.22",
     "firebase": "^10.13.1",
-    "html2canvas": "^1.4.1",
+    "lodash": "^4.17.21",
+    "lodash.debounce": "^4.0.8",
     "mapbox-gl": "^3.7.0",
+    "typescript": "^5.7.2",
     "vue": "^3.4.38",
-    "vue-router": "^4.4.3"
+    "vue-router": "^4.4.3",
+    "vuex": "^4.1.0"
   }
 }
