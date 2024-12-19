@@ -1,115 +1,123 @@
 <template>
       <div class="absolute inset-0 -z-10 transform-gpu blur-3xl opacity-20" aria-hidden="true">
-            <div class="aspect-[1097/845] w-full h-full bg-gradient-to-tr from-[#239e61] to-[#1d7e4b]"
-                style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
-            ></div>
-        </div>
-  <BaseHeading1 class="flex flex-col rounded-x justify-center text-3xl items-center text-center mt-4">Lista de viajes
+    <div
+      class="aspect-[1097/845] w-full h-full bg-gradient-to-tr from-[#239e61] to-[#1d7e4b]"
+      style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
+    ></div>
+  </div>
+  <BaseHeading1
+    class="flex flex-col rounded-x justify-center text-3xl items-center text-center mt-4"
+  >
+    Lista de viajes
   </BaseHeading1>
   <div class="flex gap-4 mb-40">
-
     <section class="w-full">
       <div class="p-4">
         <BaseLoader v-if="loadingTrips" />
-
         <ul class="flex flex-col gap-4">
           <li v-for="trip in sortedTrips" :key="trip.id">
             <div class="bg-white p-4 border rounded-xl shadow-md">
               <div class="flex flex-col lg:flex-row items-center justify-between text-xl">
-    <div class="mb-4 flex items-center space-x-4">
-        <img
-            :src="trip.photoURL || 'path/to/default-photo.jpg'"
-            alt="Foto de perfil"
-            class="w-20 h-20 rounded-full border-2 border-gray-300 object-cover"
-        />
-        <div>
-            <h1 class="inline-flex items-center text-3xl space-x-2">
-                <b>{{ trip.displayName || 'Sin nombre' }}</b>
-            </h1>
-        </div>
-    </div>
-    <div class="mb-4 flex items-center space-x-2">
-        <span class="inline-block bg-gray-200 text-3xl my-4 p-4 border rounded-xl shadow text-gray-700 font-semibold">
-            {{ trip.price }} $ ARS
-        </span>
-    </div>
-</div>
-
+                <div class="mb-4 flex items-center space-x-4">
+                  <img
+                    :src="trip.photoURL || 'path/to/default-photo.jpg'"
+                    alt="Foto de perfil"
+                    class="w-20 h-20 rounded-full border-2 border-gray-300 object-cover"
+                  />
+                  <div>
+                    <h1 class="inline-flex items-center text-3xl space-x-2">
+                      <b>{{ trip.displayName || 'Sin nombre' }}</b>
+                    </h1>
+                  </div>
+                </div>
+                <div class="mb-4 flex items-center space-x-2">
+                  <span
+                    class="inline-block bg-gray-200 text-3xl my-4 p-4 border rounded-xl shadow text-gray-700 font-semibold"
+                  >
+                    {{ trip.price }} $ ARS
+                  </span>
+                </div>
+              </div>
 
               <div class="text-2xl text-green-700">
-                <h2 class="inline-flex items-center text-2xl text-green-700 my-4 px-4 py-2 border rounded-xl shadow">
+                <h2
+                  class="inline-flex flex-col sm:flex-row items-center text-2xl text-green-700 my-4 px-4 py-2 border rounded-xl shadow"
+                >
                   <span class="mr-2">
                     <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink">
-                      <rect width="38" height="38" fill="url(#pattern0_229_9574)" />
-                      <defs>
-                        <pattern id="pattern0_229_9574" patternContentUnits="objectBoundingBox" width="1" height="1">
-                          <use xlink:href="#image0_229_9574" transform="scale(0.02)" />
-                        </pattern>
-                        <image id="image0_229_9574" width="50" height="50"
-                          xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACUklEQVR4nO2ZS2sUQRCAP19EySoiEZUEAkFBiOCe4uYHeBO9RXPKWfAUBQ8eJCEs3kQ95PULPMSDt+BF8R1EL4K5JkhQE8FgFNfXSEMFliUmXdnqnh7xg4JlZqiaj+6p2emG/6zJbqAfmABmgA/Adwn3+7mcOyfXJschYBT4AmSe4a6dBA6TAC3AMLCiEGgMN1rXJFcutAEPmhBojCfAwdgSx4B5Q4nVmJPcUTgQSKJextUIyk6ZAlngeBz6mRmOIJFJVEO22Ga6kzZqQFcIkdGIEpnEuLVECficg8iK1DajX3kD34AbwAmgVcL9vinnNLn6LEUmFIXfAsfXyVWWa3zzjVmKzChGYj2JehnfkXlmKbLoWdRNJ19ueeZ8bylS8yzao8hZUYyyGb7TQNNhSp45v9ppwLsAIns8cy5YirzJcWq9thS561nUvSesH/YpS5Gq4sF0rXUjyooGMmQp0udZNJOXXdnwhXjaUmQ/8EtRvCZTpyINwEWvHPMdiQz4IU3BlFeKG7CKhxT8oyqTuBRC5Ghkid9AJ4F4GVHkPgE5H1HkbEgR130+RZBYAHYQmOsRRK4QgY5NfK5qYhnYSyTGAoqMEJH2QGtcH4F9RGYogMgFcmCX8WL2bIxO9TcGDEVOkSNbgRcGEvdIgLJsn21Wwu0lHiERqk2IDJIQLbJIoJVw29XbSIwK8FMh4f4ddJMoIwqRiyTMduCRh8S0dLyk6QCWNliUdtt4heCMfKo2Srhn6CQF4+oaIpcpIFuA23USd+RYISnJjtNT601N/lX+AJW6sAqkjpn4AAAAAElFTkSuQmCC" />
-                      </defs>
-                    </svg>
-
+xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="38" height="38" fill="url(#pattern0_229_9574)" />
+<defs>
+  <pattern id="pattern0_229_9574" patternContentUnits="objectBoundingBox" width="1" height="1">
+    <use xlink:href="#image0_229_9574" transform="scale(0.02)" />
+  </pattern>
+  <image id="image0_229_9574" width="50" height="50"
+    xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACUklEQVR4nO2ZS2sUQRCAP19EySoiEZUEAkFBiOCe4uYHeBO9RXPKWfAUBQ8eJCEs3kQ95PULPMSDt+BF8R1EL4K5JkhQE8FgFNfXSEMFliUmXdnqnh7xg4JlZqiaj+6p2emG/6zJbqAfmABmgA/Adwn3+7mcOyfXJschYBT4AmSe4a6dBA6TAC3AMLCiEGgMN1rXJFcutAEPmhBojCfAwdgSx4B5Q4nVmJPcUTgQSKJextUIyk6ZAlngeBz6mRmOIJFJVEO22Ga6kzZqQFcIkdGIEpnEuLVECficg8iK1DajX3kD34AbwAmgVcL9vinnNLn6LEUmFIXfAsfXyVWWa3zzjVmKzChGYj2JehnfkXlmKbLoWdRNJ19ueeZ8bylS8yzao8hZUYyyGb7TQNNhSp45v9ppwLsAIns8cy5YirzJcWq9thS561nUvSesH/YpS5Gq4sF0rXUjyooGMmQp0udZNJOXXdnwhXjaUmQ/8EtRvCZTpyINwEWvHPMdiQz4IU3BlFeKG7CKhxT8oyqTuBRC5Ghkid9AJ4F4GVHkPgE5H1HkbEgR130+RZBYAHYQmOsRRK4QgY5NfK5qYhnYSyTGAoqMEJH2QGtcH4F9RGYogMgFcmCX8WL2bIxO9TcGDEVOkSNbgRcGEvdIgLJsn21Wwu0lHiERqk2IDJIQLbJIoJVw29XbSIwK8FMh4f4ddJMoIwqRiyTMduCRh8S0dLyk6QCWNliUdtt4heCMfKo2Srhn6CQF4+oaIpcpIFuA23USd+RYISnJjtNT601N/lX+AJW6sAqkjpn4AAAAAElFTkSuQmCC" />
+</defs>
+</svg>
                   </span>
-                  <strong class="text-gray-900 hidden sm:inline">Origen - </strong>
-<span class="text-green-700">{{ trip.origin || 'No especificado' }}</span>
-
+                  <strong class="text-gray-900 sm:inline">Origen -</strong>
+                  <span class="text-green-700 block sm:inline">
+                    {{ trip.origin || 'No especificado' }}
+                  </span>
                 </h2>
               </div>
 
               <div class="text-2xl text-green-700">
-                <h2 class="inline-flex items-center text-2xl text-green-700 my-4 px-4 py-2 border rounded-xl shadow">
+                <h2
+                  class="inline-flex flex-col sm:flex-row items-center text-2xl text-green-700 my-4 px-4 py-2 border rounded-xl shadow"
+                >
                   <span class="mr-2">
-<svg width="38" height="50" viewBox="0 0 38 50" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="38" height="50" fill="url(#pattern0_241_9573)"/>
-<defs>
-<pattern id="pattern0_241_9573" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_241_9573" transform="matrix(0.02 0 0 0.0152 0 0.12)"/>
-</pattern>
-<image id="image0_241_9573" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADN0lEQVR4nO2ZS2gTURSGry+q+EBEUbGY5t6JShUVBB8rV+5EV/WB0jknkYJiNyq4cBGUUtxJqqDJnNuIrizowp24UXy1IroRdKtIsVVBsRVbq5WTqG1pU++kdyYT8YcDYTKcO9+cx32MEP81XqspOV9q3C815hThY0nQKzUMFoygV2no4v8kufv4XhE1rcw2LVcaLioN/UrjsJlBvyT0lJdyKv38wsk01yiCM5KwzxxgrHG0lMaz7EtUQquyTYulhrvlAkwA9DCWd5eFCiEpuU4SvrYFMcpese9QIOJeamlAEH9geIxAIWJ5dzanQIAQw4U0I3wQaM1wYQcNoUZgWgNrsVPpTmWADCQ0SusgxXkiHAj12wiyViHqLxyZJzV8DhtEEvbx2NZAeNnh6wE0fFUEmYTGLeuvHJzLxr+lxrbCf/6A9tgEyfl4i2/qNG4o5SuRdzfyPT5ALlkD4QWgaSQmgxgDYxgZSdBpDURqeGdYnBlzn3jezCf22AMhHDAZNO6lNpv6dHLuVtMoC2sghmngp8PwvYYR+WINRGl4axvEuXpggVmxQ7c9EMIXlUstfG4NRGq8aThom/Vi13jdHghhq2lhcmv9m79fc4lRA1EEp62B8OzqZ0KcDMb3hEjJXdZAHI1LlIbvPmAGOHW4DrgBFDoUJbfxNeNI6EKEv3FTEDYlCZ8Zv0VbRnBPVPOmSo2AnLAOEsu7a8KFwB91lIyJICQ1PA0LRBLcCQSiCIKHQ4tIO+wNDKS4PoKPwYNA96Zs0ywRpBTBuRAickoELSd3qLaM7aqP2sBPsby7UIQh3n4GWOQtIiwlLjeuCOaMCz7UeqlFIkzxYs46iAdHRdiq7WiYY/cwG14G3qlKSXrg2gKJa9wpKqZ0errS+GTKIAS3RaWVKJ5RDU4hpfplOyREFCQNd5AlonFMREVOprmGDwnKiEaX6GiYIaIkh09FCIdMIQqrg1zjWhFFSYIWHxE5LqKq7en0TKXxvkE0bnHHE1GWw4tKwvelixt7+DOeqAapdtjNW9UJIIbiHuwQ1SRJkB6XUgQnRdVpWEyTBNdGzRc3+JqoRtXzR1SCTqnxkdWPmuIf1k9gLEjA0NwZhgAAAABJRU5ErkJggg=="/>
-</defs>
-</svg>
-
-
-
-
+                    <svg width="38" height="50" viewBox="0 0 38 50" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect width="38" height="50" fill="url(#pattern0_241_9573)"/>
+  <defs>
+  <pattern id="pattern0_241_9573" patternContentUnits="objectBoundingBox" width="1" height="1">
+  <use xlink:href="#image0_241_9573" transform="matrix(0.02 0 0 0.0152 0 0.12)"/>
+  </pattern>
+  <image id="image0_241_9573" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADN0lEQVR4nO2ZS2gTURSGry+q+EBEUbGY5t6JShUVBB8rV+5EV/WB0jknkYJiNyq4cBGUUtxJqqDJnNuIrizowp24UXy1IroRdKtIsVVBsRVbq5WTqG1pU++kdyYT8YcDYTKcO9+cx32MEP81XqspOV9q3C815hThY0nQKzUMFoygV2no4v8kufv4XhE1rcw2LVcaLioN/UrjsJlBvyT0lJdyKv38wsk01yiCM5KwzxxgrHG0lMaz7EtUQquyTYulhrvlAkwA9DCWd5eFCiEpuU4SvrYFMcpese9QIOJeamlAEH9geIxAIWJ5dzanQIAQw4U0I3wQaM1wYQcNoUZgWgNrsVPpTmWADCQ0SusgxXkiHAj12wiyViHqLxyZJzV8DhtEEvbx2NZAeNnh6wE0fFUEmYTGLeuvHJzLxr+lxrbCf/6A9tgEyfl4i2/qNG4o5SuRdzfyPT5ALlkD4QWgaSQmgxgDYxgZSdBpDURqeGdYnBlzn3jezCf22AMhHDAZNO6lNpv6dHLuVtMoC2sghmngp8PwvYYR+WINRGl4axvEuXpggVmxQ7c9EMIXlUstfG4NRGq8aThom/Vi13jdHghhq2lhcmv9m79fc4lRA1EEp62B8OzqZ0KcDMb3hEjJXdZAHI1LlIbvPmAGOHW4DrgBFDoUJbfxNeNI6EKEv3FTEDYlCZ8Zv0VbRnBPVPOmSo2AnLAOEsu7a8KFwB91lIyJICQ1PA0LRBLcCQSiCIKHQ4tIO+wNDKS4PoKPwYNA96Zs0ywRpBTBuRAickoELSd3qLaM7aqP2sBPsby7UIQh3n4GWOQtIiwlLjeuCOaMCz7UeqlFIkzxYs46iAdHRdiq7WiYY/cwG14G3qlKSXrg2gKJa9wpKqZ0errS+GTKIAS3RaWVKJ5RDU4hpfplOyREFCQNd5AlonFMREVOprmGDwnKiEaX6GiYIaIkh09FCIdMIQqrg1zjWhFFSYIWHxE5LqKq7en0TKXxvkE0bnHHE1GWw4tKwvelixt7+DOeqAapdtjNW9UJIIbiHuwQ1SRJkB6XUgQnRdVpWEyTBNdGzRc3+JqoRtXzR1SCTqnxkdWPmuIf1k9gLEjA0NwZhgAAAABJRU5ErkJggg=="/>
+  </defs>
+  </svg>
                   </span>
-                  <strong class="text-gray-900 hidden sm:inline">Destino - </strong><span class="text-green-700">   {{ trip.destination || 'No especificado' }} </span>
+                  <strong class="text-gray-900 sm:inline">Destino -</strong>
+                  <span class="text-green-700 block sm:inline">
+                    {{ trip.destination || 'No especificado' }}
+                  </span>
                 </h2>
+              </div>
 
-                <div class="flex items-center gap-2 mt-2 mb-4">
-                  <div class="inline-flex items-center text-2xl text-gray-900 px-4 py-2 border rounded-xl shadow">
+              <div class="flex flex-wrap gap-2 mt-2 mb-4">
+                <div
+                  class="inline-flex items-center text-2xl text-gray-900 px-4 py-2 border rounded-xl shadow"
+                >
                   <span class="mr-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-calendar4-week" viewBox="0 0 16 16">
   <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
   <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-2 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
 </svg>
-                    
-
                   </span>
-                  <span class="text-green-700">{{ trip.date || 'No especificada' }} - {{ trip.time || 'No especificado' }}</span>
+                  <span class="text-green-700">
+                    {{ trip.date || 'No especificada' }} - {{ trip.time || 'No especificado' }}
+                  </span>
                 </div>
-
               </div>
 
-              </div>
-              
-
-
-              <div class="flex items-center justify-between my-4">
-                <span v-for="option in trip.options" :key="option.icon" v-html="option.icon"
-                class="inline-block p-2"></span>
-
-                <button @click="openModal(trip)"
-                  class="ml-auto py-3 px-6 text-lg font-semibold rounded bg-green-700 text-white transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900">
+              <div class="flex flex-wrap items-center justify-between my-4">
+                <div class="flex flex-wrap gap-2">
+                  <span
+                    v-for="option in trip.options"
+                    :key="option.icon"
+                    v-html="option.icon"
+                    class="inline-block p-2"
+                  ></span>
+                </div>
+                <button
+                  @click="openModal(trip)"
+                  class="block sm:inline ml-auto py-3 px-6 text-lg font-semibold rounded bg-green-700 text-white transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900 mt-4 sm:mt-0"
+                >
                   Ver más
                 </button>
-
               </div>
-
             </div>
-
           </li>
         </ul>
       </div>
