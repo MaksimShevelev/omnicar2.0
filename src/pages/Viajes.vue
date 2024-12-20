@@ -52,8 +52,8 @@
                     </svg>
 
                   </span>
-                  <strong class="text-gray-900 hidden sm:inline">Origen - </strong>
-<span class="text-green-700">{{ trip.origin || 'No especificado' }}</span>
+                  
+<span class="text-green-700"><strong class="text-gray-900 hidden sm:inline">Origen - </strong> {{ trip.origin || 'No especificado' }}</span>
 
                 </h2>
               </div>
@@ -75,7 +75,7 @@
 
 
                   </span>
-                  <strong class="text-gray-900 hidden sm:inline">Destino - </strong><span class="text-green-700">   {{ trip.destination || 'No especificado' }} </span>
+                  <span class="text-green-700"><strong class="text-gray-900 hidden sm:inline">Destino - </strong>   {{ trip.destination || 'No especificado' }} </span>
                 </h2>
 
                 <div class="flex items-center gap-2 mt-2 mb-4">
@@ -97,16 +97,22 @@
               
 
 
-              <div class="flex flex-wrap items-center justify-center sm:justify-between my-4">
-                <span v-for="option in trip.options" :key="option.icon" v-html="option.icon"
-                class="inline-block p-2"></span>
+              <div class="flex flex-wrap items-center justify-between gap-2 my-4">
+    <!-- Контейнер для иконок -->
+    <div class="flex flex-wrap gap-1">
+        <span v-for="option in trip.options" :key="option.icon" v-html="option.icon"
+            class="inline-block p-1"></span>
+    </div>
 
-                <button @click="openModal(trip)"
-                 class="block w-full sm:w-auto text-center py-3 px-6 text-sm sm:text-lg font-semibold rounded bg-green-700 text-white transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900 mt-4 sm:mt-0">
-                  Ver más
-                </button>
+    <!-- Кнопка -->
+    <button @click="openModal(trip)"
+        class="w-full sm:w-auto text-center sm:ml-auto py-3 px-6 text-lg font-semibold rounded bg-green-700 text-white transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900 mt-4 sm:mt-0">
+        Ver más
+    </button>
+</div>
 
-              </div>
+
+
 
             </div>
 
@@ -391,5 +397,6 @@ export default {
 .ventana{
   z-index: 9999;
 }
+
 
 </style>
