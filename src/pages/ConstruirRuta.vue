@@ -61,10 +61,10 @@
                 </div>
 
 
-                <button @click="getRoute"
-                    class="transition-all py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900 w-full">
-                    Crear ruta
-                </button>
+                <button v-if="showCreateButton" @click="getRoute"
+    class="transition-all py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900 w-full">
+    Crear ruta
+</button>
             </section>
 
 
@@ -86,10 +86,15 @@
 <p class="my-4 "><strong>Distancia - </strong> {{ routeInfo.distance }} km</p>
 <p class="my-4 "><strong>Tiempo de viaje - </strong> {{ routeInfo.duration.hours }}
     hs {{ routeInfo.duration.minutes }} min</p>
-<p class="my-4 "><strong>Precio recomendado por 1 asiento - </strong> {{
-    routeInfo.recommendedPrice }} $ ARS <span class="info-icon" title="El precio recomendado se calcula según la distancia del recorrido, la cantidad de asientos, el consumo promedio de combustible de tu auto y el precio actual del tipo de combustible que usa tu vehículo">
-        &#128712;
-    </span></p>
+    <p class="my-4 flex items-center">
+    <strong>Precio recomendado por 1 asiento - </strong>&nbsp;{{ routeInfo.recommendedPrice }} $ ARS&nbsp;
+    <span class="info-icon" title="El precio recomendado se calcula según la distancia del recorrido, la cantidad de asientos, el consumo promedio de combustible de tu auto y el precio actual del tipo de combustible que usa tu vehículo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+        </svg>
+    </span>
+</p>
         
 <div class="mb-4">
 <label class="block mb-2"><strong>Precio por 1 asiento</strong></label>
@@ -155,7 +160,7 @@ export default {
             map: null,
             isSaving: false, 
             getSuggestionsDebounced: null,
-            
+            showCreateButton: true, // Флаг для отображения кнопки
         };
     },
     methods: {
@@ -167,92 +172,98 @@ export default {
         },
 
         async getRoute() {
-            if (!this.origin.city || !this.destination.city) {
-                alert("Please enter valid cities for origin and destination.");
-                return;
-            }
+    if (!this.origin.city || !this.destination.city) {
+        alert("Please enter valid cities for origin and destination.");
+        return;
+    }
 
-            const originCoordinates = await this.getCoordinates(this.origin.city);
-            const destinationCoordinates = await this.getCoordinates(this.destination.city);
+    const originCoordinates = await this.getCoordinates(this.origin.city);
+    const destinationCoordinates = await this.getCoordinates(this.destination.city);
 
-            if (!originCoordinates || !destinationCoordinates) {
-                alert("Coordinates for the cities could not be found.");
-                return;
-            }
+    if (!originCoordinates || !destinationCoordinates) {
+        alert("Coordinates for the cities could not be found.");
+        return;
+    }
 
-            const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${originCoordinates[0]},${originCoordinates[1]};${destinationCoordinates[0]},${destinationCoordinates[1]}?geometries=polyline&access_token=${mapboxgl.accessToken}`;
-            const response = await fetch(url);
-            const data = await response.json();
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${originCoordinates[0]},${originCoordinates[1]};${destinationCoordinates[0]},${destinationCoordinates[1]}?geometries=polyline&access_token=${mapboxgl.accessToken}`;
+    const response = await fetch(url);
+    const data = await response.json();
 
-            if (!data.routes || data.routes.length === 0) {
-                alert("No route found.");
-                return;
-            }
+    if (!data.routes || data.routes.length === 0) {
+        alert("No route found.");
+        return;
+    }
 
-            const route = data.routes[0].geometry;
-            const coordinates = polyline.decode(route);
+    const route = data.routes[0].geometry;
+    const coordinates = polyline.decode(route);
 
-            const geojson = {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                    type: 'LineString',
-                    coordinates: coordinates.map(coord => [coord[1], coord[0]])
-                }
-            };
-
-            this.routeInfo.distance = (data.routes[0].distance / 1000).toFixed(2);
-            const totalMinutes = Math.round(data.routes[0].duration / 60);
-            this.routeInfo.duration = { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
-
-            const basePrice = (parseFloat(this.routeInfo.distance) / 100) * 7 * 1200;
-            this.routeInfo.recommendedPrice = this.numSeats > 0 ? (basePrice / this.numSeats).toFixed(2) : basePrice.toFixed(2);
-
-            if (this.routeLayer) {
-                this.map.removeLayer('route');
-                this.map.removeSource('route');
-            }
-
-            this.map.addSource('route', {
-                type: 'geojson',
-                data: geojson,
-            });
-
-            this.map.addLayer({
-                id: 'route',
-                type: 'line',
-                source: 'route',
-                layout: { 'line-join': 'round', 'line-cap': 'round' },
-                paint: { 'line-color': '#239e61', 'line-width': 5, 'line-opacity': 0.75 },
-            });
-
-            this.routeLayer = 'route';
-
-            const bounds = new mapboxgl.LngLatBounds();
-            coordinates.forEach(coord => bounds.extend([coord[1], coord[0]]));
-            this.map.fitBounds(bounds, { padding: 20 });
-
-            const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s-a+9ed4bd(${originCoordinates[0]},${originCoordinates[1]}),pin-s-b+000(${destinationCoordinates[0]},${destinationCoordinates[1]}),path-5+f44-0.5(${encodeURIComponent(route)})/auto/400x300?access_token=${mapboxgl.accessToken}`;
-
-            try {
-                const mapResponse = await fetch(staticMapUrl);
-                if (!mapResponse.ok) {
-                    throw new Error(`Error fetching map snapshot: ${mapResponse.status}`);
-                }
-
-                const blob = await mapResponse.blob();
-                if (blob.size < 5000) {
-                    throw new Error('Map snapshot is too small or corrupted.');
-                }
-
-                const downloadURL = await uploadFile(`mapSnapshots/${Date.now()}_map.png`, blob);
-                this.mapSnapshot = downloadURL;
-                console.log('Map snapshot saved successfully:', downloadURL);
-
-            } catch (error) {
-                console.error('Error while saving map snapshot:', error);
-            }
+    const geojson = {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+            type: 'LineString',
+            coordinates: coordinates.map(coord => [coord[1], coord[0]]),
         },
+    };
+
+    this.routeInfo.distance = (data.routes[0].distance / 1000).toFixed(2);
+    const totalMinutes = Math.round(data.routes[0].duration / 60);
+    this.routeInfo.duration = {
+        hours: Math.floor(totalMinutes / 60),
+        minutes: totalMinutes % 60,
+    };
+
+    const basePrice = (parseFloat(this.routeInfo.distance) / 100) * 7 * 1200;
+    this.routeInfo.recommendedPrice = this.numSeats > 0 ? (basePrice / this.numSeats).toFixed(2) : basePrice.toFixed(2);
+
+    if (this.routeLayer) {
+        this.map.removeLayer('route');
+        this.map.removeSource('route');
+    }
+
+    this.map.addSource('route', {
+        type: 'geojson',
+        data: geojson,
+    });
+
+    this.map.addLayer({
+        id: 'route',
+        type: 'line',
+        source: 'route',
+        layout: { 'line-join': 'round', 'line-cap': 'round' },
+        paint: { 'line-color': '#239e61', 'line-width': 5, 'line-opacity': 0.75 },
+    });
+
+    this.routeLayer = 'route';
+
+    const bounds = new mapboxgl.LngLatBounds();
+    coordinates.forEach(coord => bounds.extend([coord[1], coord[0]]));
+    this.map.fitBounds(bounds, { padding: 20 });
+
+    const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s-a+9ed4bd(${originCoordinates[0]},${originCoordinates[1]}),pin-s-b+000(${destinationCoordinates[0]},${destinationCoordinates[1]}),path-5+f44-0.5(${encodeURIComponent(route)})/auto/400x300?access_token=${mapboxgl.accessToken}`;
+
+    try {
+        const mapResponse = await fetch(staticMapUrl);
+        if (!mapResponse.ok) {
+            throw new Error(`Error fetching map snapshot: ${mapResponse.status}`);
+        }
+
+        const blob = await mapResponse.blob();
+        if (blob.size < 5000) {
+            throw new Error('Map snapshot is too small or corrupted.');
+        }
+
+        const downloadURL = await uploadFile(`mapSnapshots/${Date.now()}_map.png`, blob);
+        this.mapSnapshot = downloadURL;
+        console.log('Map snapshot saved successfully:', downloadURL);
+    } catch (error) {
+        console.error('Error while saving map snapshot:', error);
+    }
+
+    // Скрываем кнопку после успешного создания маршрута
+    this.showCreateButton = false;
+}
+,
 
         incrementSeats() {
             this.numSeats = Math.min(this.numSeats + 1, 4);
