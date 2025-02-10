@@ -12,6 +12,9 @@ let userData = reactive({
     rol: null,
     bio: null,
     photoURL: null,
+    telefono: null,
+    marca: null,
+    modelo: null,
 });
 
 // Попытка загрузить данные пользователя из localStorage
@@ -21,7 +24,7 @@ if (localStorage.getItem('user')) {
     } catch (error) {
         console.error('Invalid user data in localStorage', error);
         // В случае ошибки восстанавливаем значения по умолчанию
-        userData = { id: null, email: null, displayName: null, rol: null, bio: null, photoURL: null };
+        userData = { id: null, email: null, displayName: null, rol: null, bio: null, photoURL: null,  telefono: null, marca: null, modelo: null};
     }
 }
 
@@ -36,6 +39,9 @@ onAuthStateChanged(auth, (user) => {
             email: user.email,
             displayName: user.displayName,
             photoURL: user.photoURL,
+            telefono: user.telefono,
+            marca: user.marca,
+            modelo: user.modelo,
         };
 
         getUserProfileById(user.uid).then((profile) => {
@@ -56,6 +62,9 @@ onAuthStateChanged(auth, (user) => {
             rol: null,
             bio: null,
             photoURL: null,
+            telefono: null,
+            marca: null,
+            modelo: null,
         });
         localStorage.removeItem('user');
     }
@@ -84,10 +93,10 @@ export async function register({ email, password }) {
 }
 
 // Функция для редактирования профиля
-export async function editMyProfile({ displayName, rol, bio }) {
+export async function editMyProfile({ displayName, rol, bio, telefono, email, marca, modelo }) {
     try {
         const promiseAuth = updateProfile(auth.currentUser, { displayName });
-        const promiseProfile = editUserProfile(userData.id, { displayName, rol, bio });
+        const promiseProfile = editUserProfile(userData.id, { displayName, rol, bio, telefono, email, marca, modelo});
         await Promise.all([promiseAuth, promiseProfile]);
 
         // Обновляем данные после изменения
@@ -95,6 +104,10 @@ export async function editMyProfile({ displayName, rol, bio }) {
             displayName,
             rol,
             bio,
+            telefono,
+            email,
+            marca,
+            modelo,
         });
     } catch (error) {
         console.error('[auth.js editMyProfile] Error while editing profile: ', error);
@@ -120,7 +133,10 @@ export async function editMyProfilePhoto(photo) {
                 displayName: userData.displayName || null,
                 rol: userData.rol || null,
                 bio: userData.bio || null,
+                telefono: userData.telefono || null,
                 photoURL,
+                marca: userData.marca || null,
+                modelo: userData.modelo || null,
             };
 
             const promiseFirestore = editUserProfile(userData.id, updateData);

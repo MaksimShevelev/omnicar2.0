@@ -49,11 +49,12 @@
   </template>
   
   <script>
-  import { savePrivateChatMessage, subscribeToPrivateChatMessages } from '../services/private-chat';
+  import { savePrivateChatMessage, subscribeToPrivateChatMessages, saveNotification } from '../services/private-chat';
   import { subscribeToAuthState } from '../services/auth';
   import { getUserProfileById } from '../services/user-profile';
   import BaseLoader from '../components/BaseLoader.vue';
   import BaseHeading1 from '../components/BaseHeading1.vue';
+  import {  } from '../services/private-chat'; 
   
   export default {
       name: 'PrivateChat',
@@ -87,29 +88,33 @@
           };
       },
       methods: {
-          async handleSubmit() {
-              const messageText = this.newMessage.text;
-              if (!messageText) return;
-  
-              try {
-                  // Отправка сообщения в чат
-                  await savePrivateChatMessage(
-                      this.loggedUser.id,
-                      this.$route.params.id,
-                      messageText,
-                  );
-  
-                  // Если сообщение адресовано этому пользователю, уведомляем его
-                  if (this.$route.params.id !== this.loggedUser.id) {
-                      this.$store.dispatch('newMessageReceived');
-                  }
-  
-                  // Очистка поля ввода
-                  this.newMessage.text = '';
-              } catch (error) {
-                  console.error('Error отправки сообщения:', error);
-              }
-          },
+        async handleSubmit() {
+        const messageText = this.newMessage.text;
+        if (!messageText) return;
+
+        try {
+            // Отправка сообщения в чат
+            await savePrivateChatMessage(
+                this.loggedUser.id,
+                this.$route.params.id,
+                messageText
+            );
+
+            // Если сообщение адресовано этому пользователю, уведомляем его
+            if (this.$route.params.id !== this.loggedUser.id) {
+                this.$store.dispatch('newMessageReceived');
+            }
+
+            // Сохраняем уведомление для получателя (если оно не существует)
+            await saveNotification(this.loggedUser.id, this.$route.params.id, messageText);
+
+            // Очищаем поле ввода после успешной отправки сообщения и уведомлений
+            this.newMessage.text = '';  // Это должно очистить поле
+
+        } catch (error) {
+            console.error('Error при отправке сообщения:', error);
+        }
+    },
           formatDate(date) {
               if (!date) return null;
   

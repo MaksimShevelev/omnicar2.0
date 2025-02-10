@@ -85,11 +85,11 @@
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Marca</strong></label>
-            <p class="text-gray-700">{{ loggedUser.firstName || 'Sin especificar' }}</p>
+            <p class="text-gray-700">{{ loggedUser.marca|| 'Sin especificar' }}</p>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Modelo</strong></label>
-            <p class="text-gray-700">{{ loggedUser.lastName || 'Sin especificar' }}</p>
+            <p class="text-gray-700">{{ loggedUser.modelo || 'Sin especificar' }}</p>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Año</strong></label>
@@ -128,8 +128,9 @@
     rol: null,
     bio: null,
     photoURL: null,
-    firstName: '',
-    lastName: '',
+    telefono: null,
+    marca: null,
+    modelo: null,
     country: '',
     streetAddress: '',
     city: '',

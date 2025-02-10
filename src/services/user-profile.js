@@ -3,7 +3,7 @@ import { db } from "./firebase";
 
 /**
  * @param {string} id 
- * @returns {Promise<{id: string, email: string, displayName: string|null, rol: string|null, bio: string|null, photoURL: string|null} | null>}
+ * @returns {Promise<{id: string, email: string, displayName: string|null, rol: string|null, bio: string|null, photoURL: string|null, telefono: string|null, marca: string|null, modelo: string|null} | null>}
  */
 export async function getUserProfileById(id) {
     if (!id) {
@@ -27,6 +27,9 @@ export async function getUserProfileById(id) {
         rol: data.rol || null,
         bio: data.bio || null,
         photoURL: data.photoURL || null,
+        telefono: data.telefono || null,
+        marca: data.marca || null,
+        modelo: data.modelo || null,
     };
 }
 
@@ -46,7 +49,7 @@ export async function createUserProfile(id, { email }) {
 
 /**
  * @param {string} id 
- * @param {{displayName: string, bio: string, photoURL: string, rol: string}} data
+ * @param {{displayName: string, bio: string, photoURL: string, rol: string, telefono: string, marca: string, modelo: string}} data
  * @returns {Promise<void>}
  */
 export async function editUserProfile(id, data) {
@@ -57,3 +60,5 @@ export async function editUserProfile(id, data) {
     const userRef = doc(db, `users/${id}`);
     await updateDoc(userRef, data);
 }
+
+

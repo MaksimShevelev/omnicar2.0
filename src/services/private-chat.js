@@ -7,7 +7,8 @@ import {
     addDoc, 
     serverTimestamp, 
     orderBy, 
-    limit, 
+    limit,
+    updateDoc, 
     onSnapshot 
 } from "firebase/firestore";
 import { getUserProfileById } from "./user-profile";
@@ -103,16 +104,44 @@ export async function savePrivateChatMessage(senderId, receiverId, text) {
  * @param {string} messageId 
  * @param {string} text 
  */
-async function saveNotification(senderId, receiverId, messageId, text) {
+export async function saveNotification(senderId, receiverId, messageId, text) {
     const notificationsRef = collection(db, 'notifications');
-    await addDoc(notificationsRef, {
-        chat_id: getCacheKey(senderId, receiverId),
-        message_id: messageId,
-        sender_id: senderId,
-        receiver_id: receiverId,
-        text,
-        created_at: serverTimestamp(),
-    });
+    
+    // Если текст не передан (undefined), задаем дефолтное значение
+    if (text === undefined) {
+        text = '';  // Можно заменить на любое дефолтное сообщение
+    }
+
+    // Получаем уведомление для текущего получателя и отправителя
+    const notificationsQuery = query(
+        notificationsRef,
+        where('sender_id', '==', senderId),
+        where('receiver_id', '==', receiverId),
+        where('read', '==', false)  // Если уведомление не прочитано
+    );
+
+    const notificationsSnapshot = await getDocs(notificationsQuery);
+
+    if (notificationsSnapshot.empty) {
+        // Если уведомления для этого отправителя нет — создаем новое
+        await addDoc(notificationsRef, {
+            chat_id: getCacheKey(senderId, receiverId),
+            message_id: messageId,
+            sender_id: senderId,
+            receiver_id: receiverId,
+            text,
+            created_at: serverTimestamp(),
+            read: false  // Уведомление по умолчанию не прочитано
+        });
+    } else {
+        // Если уведомление для этого отправителя уже существует — обновляем его
+        const existingNotification = notificationsSnapshot.docs[0];
+        await updateDoc(existingNotification.ref, {
+            message_id: messageId,
+            text, // Обновляем текст уведомления
+            created_at: serverTimestamp() // Обновляем время
+        });
+    }
 }
 
 /**
