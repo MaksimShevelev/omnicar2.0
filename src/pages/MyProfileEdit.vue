@@ -156,7 +156,7 @@ export default {
     
     async loadCarData() {
   try {
-    const response = await fetch("../public/cars.json");
+    const response = await fetch("/cars.json");
     if (!response.ok) {
       throw new Error(`Ошибка загрузки: ${response.statusText}`);
     }
