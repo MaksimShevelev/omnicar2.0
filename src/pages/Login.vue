@@ -29,9 +29,14 @@
                             <a href="#" class="font-semibold text-green-700 hover:text-green-400">¿Olvidaste tu contraseña?</a>
                         </div>
                     </div>
-                    <div class="mt-2">
-                        <input id="password" name="password" type="password" v-model="user.password" required
+                    <div class="mt-2 relative">
+                        <input id="password" name="password" :type="passwordVisible ? 'text' : 'password'" v-model="user.password" required
                             class="pl-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" />
+                        
+                        <!-- Кнопка глаза для переключения видимости пароля -->
+                        <button type="button" @click="togglePasswordVisibility" class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <i :class="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'" class="text-gray-400"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -43,6 +48,8 @@
                     </button>
                 </div>
             </form>
+
+            <BaseLoader v-if="loading" />
 
             <p class="mt-10 text-center text-sm/6 text-gray-900">
                 ¿No tienes cuenta?
@@ -57,10 +64,11 @@
 <script>
 import BaseHeading1 from '../components/BaseHeading1.vue';
 import { login } from '../services/auth';
+import BaseLoader from '../components/BaseLoader.vue';
 
 export default {
     name: 'Login',
-    components: { BaseHeading1 },
+    components: { BaseHeading1, BaseLoader },
     data() {
         return {
             user: {
@@ -68,6 +76,7 @@ export default {
                 password: '',
             },
             loading: false,
+            passwordVisible: false, // Состояние для видимости пароля
         };
     },
     methods: {
@@ -86,6 +95,9 @@ export default {
                 throw error;
             }
             this.loading = false;
+        },
+        togglePasswordVisibility() {
+            this.passwordVisible = !this.passwordVisible; // Переключение видимости пароля
         }
     }
 }
@@ -101,5 +113,4 @@ html, body {
     overflow-x: hidden;
     max-width: 100vw;
 }
-
 </style>
